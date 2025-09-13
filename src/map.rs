@@ -7,7 +7,7 @@ use crate::map_types::{
     Entry, IntoIter, IntoKeys, IntoValues, Iter, IterMut, Keys, OccupiedEntry, OccupiedError,
     Range, RangeMut, VacantEntry, Values, ValuesMut,
 };
-use crate::tree::{node::NodeGetHelper, Idx, SgError, SgTree};
+use crate::tree::{Idx, SgError, SgTree, node::NodeGetHelper};
 
 /// Safe, fallible, embedded-friendly ordered map.
 ///
@@ -333,7 +333,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// Returns `Err` if the operation can't be completed, else the `Ok` contains:
     /// * `None` if the map did not have this key present.
     /// * The old value if the map did have this key present (both the value and key are updated,
-    /// this accommodates types that can be `==` without being identical).
+    /// * This accommodates types that can be `==` without being identical).
     ///
     /// ### Warning
     ///

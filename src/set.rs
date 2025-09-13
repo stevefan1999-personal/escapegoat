@@ -734,7 +734,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// let diff: Vec<_> = a.difference(&b).cloned().collect();
     /// assert_eq!(diff, [1]);
     /// ```
-    pub fn difference(&self, other: &SgSet<T, N>) -> Difference<T, N>
+    pub fn difference(&self, other: &SgSet<T, N>) -> Difference<'_, T, N>
     where
         T: Ord,
     {
@@ -767,7 +767,10 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// but without unstable `feature(generic_const_exprs)` we can't compute `2 * N`.
     /// So we use `4096` instead of `2 * N` as a workaround, hence `N` should be `<= 2048` to ensure no panic.
     /// An `N > 2048` may or may not panic, depending on the size of sets' intersection.
-    pub fn symmetric_difference<'a>(&'a self, other: &'a SgSet<T, N>) -> SymmetricDifference<T, N>
+    pub fn symmetric_difference<'a>(
+        &'a self,
+        other: &'a SgSet<T, N>,
+    ) -> SymmetricDifference<'a, T, N>
     where
         T: Ord,
     {
@@ -792,7 +795,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// let intersection: Vec<_> = a.intersection(&b).cloned().collect();
     /// assert_eq!(intersection, [2]);
     /// ```
-    pub fn intersection(&self, other: &SgSet<T, N>) -> Intersection<T, N>
+    pub fn intersection(&self, other: &SgSet<T, N>) -> Intersection<'_, T, N>
     where
         T: Ord,
     {
@@ -823,7 +826,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// but without unstable `feature(generic_const_exprs)` we can't compute `2 * N`.
     /// So we use `4096` instead of `2 * N` as a workaround, hence `N` should be `<= 2048` to ensure no panic.
     /// An `N > 2048` may or may not panic, depending on the size of sets' intersection.
-    pub fn union<'a>(&'a self, other: &'a SgSet<T, N>) -> Union<T, N>
+    pub fn union<'a>(&'a self, other: &'a SgSet<T, N>) -> Union<'a, T, N>
     where
         T: Ord,
     {

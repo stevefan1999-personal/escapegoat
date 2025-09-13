@@ -107,7 +107,7 @@ impl<K, V, U: Copy + SmallUnsigned + Ord + PartialEq + PartialOrd, const N: usiz
 
         if self.is_occupied(idx) {
             // Extract node
-            let node = core::mem::replace(&mut self.vec[idx], None);
+            let node = self.vec[idx].take();
 
             // Append removed index to free list
             #[cfg(not(feature = "low_mem_insert"))]

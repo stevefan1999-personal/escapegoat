@@ -8,7 +8,7 @@ pub trait SmallNode<K, V> {
     /// Set key.
     fn set_key(&mut self, key: K);
 
-    // Take key, replacing current with `K::Default()`.
+    // Take key, replacing current with `MaybeUninit::zeroed()`.
     fn take_key(&mut self) -> K;
 
     /// Get value.
@@ -20,7 +20,7 @@ pub trait SmallNode<K, V> {
     /// Set value.
     fn set_val(&mut self, val: V);
 
-    // Take value, replacing current with `V::Default()`.
+    // Take value, replacing current with `MaybeUninit::zeroed()`.
     fn take_val(&mut self) -> V;
 
     /// Get left index as `usize`.

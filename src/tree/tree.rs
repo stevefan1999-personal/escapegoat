@@ -177,7 +177,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
     /// Returns `Err` if tree's stack capacity is full, else the `Ok` contains:
     /// * `None` if the tree did not have this key present.
     /// * The old value if the tree did have this key present (both the value and key are updated,
-    /// this accommodates types that can be `==` without being identical).
+    /// * This accommodates types that can be `==` without being identical).
     pub fn try_insert(&mut self, key: K, val: V) -> Result<Option<V>, SgError>
     where
         K: Ord,
@@ -510,8 +510,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
             let mut sort_metadata = self
                 .arena
                 .iter()
-                .filter(|n| n.is_some())
-                .map(|n| n.as_ref().unwrap())
+                .filter_map(|n| n.as_ref())
                 .map(|n| self.internal_get(None, n.key()))
                 .collect::<ArrayVec<NodeGetHelper<usize>, N>>();
 

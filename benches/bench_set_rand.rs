@@ -1,13 +1,13 @@
 use std::collections::BTreeSet;
 use std::iter::FromIterator;
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use scapegoat::SgSet;
 
 mod test_data;
 use test_data::{
-    RAND_100, RAND_10_000, RAND_1_000, SGS_100_RAND, SGS_10_000_RAND, SGS_1_000_RAND, STD_100_RAND,
-    STD_10_000_RAND, STD_1_000_RAND,
+    RAND_1_000, RAND_10_000, RAND_100, SGS_1_000_RAND, SGS_10_000_RAND, SGS_100_RAND,
+    STD_1_000_RAND, STD_10_000_RAND, STD_100_RAND,
 };
 
 // Benches -------------------------------------------------------------------------------------------------------------

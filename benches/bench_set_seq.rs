@@ -1,13 +1,13 @@
 use std::collections::BTreeSet;
 use std::iter::FromIterator;
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use scapegoat::SgSet;
 
 mod test_data;
 use test_data::{
-    SEQ_100, SEQ_10_000, SEQ_1_000, SGS_100_SEQ, SGS_10_000_SEQ, SGS_1_000_SEQ, STD_100_SEQ,
-    STD_10_000_SEQ, STD_1_000_SEQ,
+    SEQ_1_000, SEQ_10_000, SEQ_100, SGS_1_000_SEQ, SGS_10_000_SEQ, SGS_100_SEQ, STD_1_000_SEQ,
+    STD_10_000_SEQ, STD_100_SEQ,
 };
 
 // Benches -------------------------------------------------------------------------------------------------------------

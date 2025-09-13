@@ -55,6 +55,7 @@ impl<K, V, U: SmallUnsigned + Copy> SmallNode<K, V> for Node<K, V, U> {
     }
 
     fn take_key(&mut self) -> K {
+        // SAFETY: MaybeUninit::zeroed() is valid for all types, and we don't care about the value.
         core::mem::replace(&mut self.key, unsafe {
             MaybeUninit::zeroed().assume_init()
         })
@@ -69,6 +70,7 @@ impl<K, V, U: SmallUnsigned + Copy> SmallNode<K, V> for Node<K, V, U> {
     }
 
     fn take_val(&mut self) -> V {
+        // SAFETY: MaybeUninit::zeroed() is valid for all types, and we don't care about the value.
         core::mem::replace(&mut self.val, unsafe {
             MaybeUninit::zeroed().assume_init()
         })

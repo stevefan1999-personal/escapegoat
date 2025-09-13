@@ -27,7 +27,7 @@
 /// ```
 #[macro_export]
 macro_rules! sgmap {
-    ( $capacity:expr $(, $key:expr => $value:expr)* $(,)? ) => {
+    ( $capacity:expr_2021 $(, $key:expr_2021 => $value:expr_2021)* $(,)? ) => {
         {
             let mut _sg_map = SgMap::<_,_, $capacity>::new();
             $(
@@ -61,7 +61,7 @@ macro_rules! sgmap {
 /// ```
 #[macro_export]
 macro_rules! sgset {
-    ( $capacity:expr $(, $value:expr)* $(,)? ) => {
+    ( $capacity:expr_2021 $(, $value:expr_2021)* $(,)? ) => {
         {
             let mut _sg_set = SgSet::<_, $capacity>::new();
             $(

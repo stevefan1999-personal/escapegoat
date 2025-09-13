@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::iter::FromIterator;
 use std::ops::Bound::{Excluded, Included};
 
-use scapegoat::{sgmap, SgError, SgMap};
+use scapegoat::{SgError, SgMap, sgmap};
 
 use rand::Rng;
 

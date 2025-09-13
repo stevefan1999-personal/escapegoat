@@ -195,7 +195,7 @@ Licensed under the [MIT license](https://github.com/tnballo/scapegoat/blob/maste
 //#![feature(variant_count)]
 
 // Production
-#![warn(unsafe_code)]
+#![forbid(clippy::undocumented_unsafe_blocks)]
 #![cfg_attr(not(any(test, fuzzing)), no_std)]
 #![cfg_attr(not(any(test, fuzzing)), deny(missing_docs))]
 #![doc(
@@ -224,4 +224,3 @@ pub mod set_types;
 
 // Initialization convenience macros.
 mod macros;
-pub use macros::*;

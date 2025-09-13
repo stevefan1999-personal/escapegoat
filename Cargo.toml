@@ -1,9 +1,9 @@
 [package]
 name = "scapegoat"
 version = "2.3.0"
-rust = "1.55"
+rust-version = "1.85"
 authors = ["Tiemoko Ballo"]
-edition = "2018"
+edition = "2024"
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/tnballo/scapegoat"
@@ -51,3 +51,6 @@ harness = false
 [[bench]]
 name = "bench_set_from"
 harness = false
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(fuzzing)'] }

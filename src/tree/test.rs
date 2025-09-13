@@ -2,9 +2,9 @@ use core::fmt::Debug;
 use core::iter::FromIterator;
 use std::collections::{BTreeMap, BTreeSet, HashSet};
 
+use super::SgError;
 use super::node_dispatch::SmallNode;
 use super::tree::{Idx, SgTree};
-use super::SgError;
 
 use arrayvec::ArrayVec;
 use rand::rngs::SmallRng;

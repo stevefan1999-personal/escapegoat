@@ -1,7 +1,7 @@
 use std::collections::BTreeSet;
 use std::convert::TryInto;
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use scapegoat::SgSet;
 
 mod test_data;

@@ -21,12 +21,14 @@ fn main() {
     assert!(example.try_insert(4, "borrow checker").is_ok());
 
     // Ordered reference iterator
-    assert!(example
-        .iter()
-        .map(|(_, v)| *v)
-        .collect::<ArrayVec<&str, CAPACITY>>()
-        .iter()
-        .eq(["Please", "don't blame", "the", "borrow checker"].iter()));
+    assert!(
+        example
+            .iter()
+            .map(|(_, v)| *v)
+            .collect::<ArrayVec<&str, CAPACITY>>()
+            .iter()
+            .eq(["Please", "don't blame", "the", "borrow checker"].iter())
+    );
 
     // Container indexing
     assert_eq!(example[&3], "the");
@@ -48,16 +50,18 @@ fn main() {
     }
 
     // New message :)
-    assert!(example
-        .into_values()
-        .collect::<ArrayVec<&str, CAPACITY>>()
-        .iter()
-        .eq([
-            "Leverage",
-            "your friend the",
-            "borrow checker",
-            "for",
-            "safety!"
-        ]
-        .iter()));
+    assert!(
+        example
+            .into_values()
+            .collect::<ArrayVec<&str, CAPACITY>>()
+            .iter()
+            .eq([
+                "Leverage",
+                "your friend the",
+                "borrow checker",
+                "for",
+                "safety!"
+            ]
+            .iter())
+    );
 }
