@@ -39,8 +39,10 @@ impl<K, V, U: SmallUnsigned> Node<K, V, U> {
             left_idx: None,
             right_idx: None,
 
+            // SAFETY: Since U is subset of (u8, u16, u32, u64, u128), transmute_copy from 1 is safe, at least for little endian system.
+            //         This is equivalent to U::checked_from(1) but const.
             #[cfg(feature = "fast_rebalance")]
-            subtree_size: U::checked_from(1),
+            subtree_size: unsafe { core::mem::transmute_copy(&1) },
         }
     }
 }

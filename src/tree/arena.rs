@@ -35,13 +35,6 @@ impl<K, V, U: Copy + SmallUnsigned + Ord + PartialEq + PartialOrd, const N: usiz
 
     /// Constructor.
     pub const fn new() -> Self {
-        let a = Arena {
-            vec: ArrayVec::<Option<Node<K, V, U>>, N>::new_const(),
-
-            #[cfg(not(feature = "low_mem_insert"))]
-            free_list: ArrayVec::<U, N>::new_const(),
-        };
-
         // #[cfg(not(feature = "low_mem_insert"))]
         // debug_assert_eq!(0, a.free_list.len());
         // debug_assert_eq!(0, a.vec.len());
@@ -50,7 +43,12 @@ impl<K, V, U: Copy + SmallUnsigned + Ord + PartialEq + PartialOrd, const N: usiz
         // debug_assert_eq!(N, a.free_list.capacity());
         // debug_assert_eq!(N, a.vec.capacity());
 
-        a
+        Arena {
+            vec: ArrayVec::<Option<Node<K, V, U>>, N>::new_const(),
+
+            #[cfg(not(feature = "low_mem_insert"))]
+            free_list: ArrayVec::<U, N>::new_const(),
+        }
     }
     /// Returns an iterator over immutable arena elements.
     pub fn iter(&self) -> Iter<'_, Option<Node<K, V, U>>> {

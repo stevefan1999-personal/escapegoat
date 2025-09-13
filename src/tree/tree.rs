@@ -9,6 +9,8 @@ use core::ops::{
     Index, RangeBounds, Sub,
 };
 
+use branches::{assume, likely, unlikely};
+
 use super::arena::Arena;
 use super::error::SgError;
 use super::iter::{IntoIter, Iter, IterMut};
@@ -127,6 +129,10 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
         // Rip elements directly out of other's arena and clear it
         for arena_idx in 0..other.arena.len() {
             if let Some(mut node) = other.arena.remove(arena_idx) {
+                // Prefetch write location for better cache performance
+                if let Some(root_idx) = self.opt_root_idx {
+                    branches::prefetch_write_data::<_, 1>(&self.arena[root_idx]);
+                }
                 self.insert(node.take_key(), node.take_val());
             }
         }
@@ -150,6 +156,10 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
         if (self.len() + other.len() - self.intersect_cnt(other)) <= self.capacity() {
             for arena_idx in 0..other.arena.len() {
                 if let Some(mut node) = other.arena.remove(arena_idx) {
+                    // Prefetch write location for better cache performance
+                    if let Some(root_idx) = self.opt_root_idx {
+                        branches::prefetch_write_data::<_, 1>(&self.arena[root_idx]);
+                    }
                     self.try_insert(node.take_key(), node.take_val())?;
                 }
             }
@@ -484,13 +494,16 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
         while let Some(idx) = subtree_worklist.pop() {
             let node = &self.arena[idx.usize()];
 
+            // Prefetch children for better cache performance
             if let Some(left_idx) = node.left_idx() {
+                branches::prefetch_read_data::<_, 0>(&self.arena[left_idx]);
                 let left = U::checked_from(left_idx);
                 subtree_worklist.push(left);
                 subtree_flattened.push(left);
             }
 
             if let Some(right_idx) = node.right_idx() {
+                branches::prefetch_read_data::<_, 0>(&self.arena[right_idx]);
                 let right = U::checked_from(right_idx);
                 subtree_worklist.push(right);
                 subtree_flattened.push(right);
@@ -549,6 +562,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
             .enumerate()
             .filter_map(|(i, node)| Some((i, node.as_ref()?)))
         {
+            branches::prefetch_read_data::<_, 1>(&self.arena[idx]);
             if range.contains(node.key().borrow()) {
                 node_idxs.push(idx);
             }
@@ -609,21 +623,28 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
                     match key.cmp(node.key().borrow()) {
                         Ordering::Less => match node.left_idx() {
                             Some(lt_idx) => {
+                                branches::prefetch_read_data::<_, 0>(&self.arena[lt_idx]);
                                 opt_parent_idx = Some(curr_idx);
                                 curr_idx = lt_idx;
                                 is_right_child = false;
                             }
                             None => {
-                                if let Some(path) = opt_path {
-                                    path.clear(); // Find failed, clear path
+                                if unlikely(opt_path.is_some()) {
+                                    // Find failed, clear path
+                                    unsafe {
+                                        opt_path.unwrap_unchecked().clear();
+                                    }
                                 }
 
                                 return NodeGetHelper::new(None, None, false);
                             }
                         },
                         Ordering::Equal => {
-                            if let Some(path) = opt_path {
-                                path.pop(); // Only parents in path
+                            if likely(opt_path.is_some()) {
+                                // Only parents in path
+                                unsafe {
+                                    opt_path.unwrap_unchecked().pop();
+                                }
                             }
 
                             return NodeGetHelper::new(
@@ -634,13 +655,17 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
                         }
                         Ordering::Greater => match node.right_idx() {
                             Some(gt_idx) => {
+                                branches::prefetch_read_data::<_, 0>(&self.arena[gt_idx]);
                                 opt_parent_idx = Some(curr_idx);
                                 curr_idx = gt_idx;
                                 is_right_child = true;
                             }
                             None => {
-                                if let Some(path) = opt_path {
-                                    path.clear(); // Find failed, clear path
+                                if unlikely(opt_path.is_some()) {
+                                    // Find failed, clear path
+                                    unsafe {
+                                        opt_path.unwrap_unchecked().clear();
+                                    }
                                 }
 
                                 return NodeGetHelper::new(None, None, false);
@@ -681,7 +706,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
             }
         }
 
-        debug_assert!(ngh.node_idx().is_some());
+        unsafe { assume(ngh.node_idx().is_some()) };
         let new_node_idx = ngh.node_idx().expect("Inserted node index must be `Some`");
         (opt_val, new_node_idx)
     }
@@ -714,12 +739,15 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
                     match key.cmp(curr_node.key()) {
                         Ordering::Less => {
                             match curr_node.left_idx() {
-                                Some(left_idx) => curr_idx = left_idx,
+                                Some(left_idx) => {
+                                    branches::prefetch_read_data::<_, 0>(&self.arena[left_idx]);
+                                    curr_idx = left_idx;
+                                }
                                 None => {
                                     // New min check
                                     let mut new_min_found = false;
                                     let min_node = &self.arena[self.min_idx];
-                                    if &key < min_node.key() {
+                                    if likely(&key < min_node.key()) {
                                         new_min_found = true;
                                     }
 
@@ -727,7 +755,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
                                     let new_node_idx = self.arena.add(key, val);
 
                                     // New min update
-                                    if new_min_found {
+                                    if likely(new_min_found) {
                                         self.min_idx = new_node_idx;
                                     }
 
@@ -754,12 +782,15 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
                         }
                         Ordering::Greater => {
                             match curr_node.right_idx() {
-                                Some(right_idx) => curr_idx = right_idx,
+                                Some(right_idx) => {
+                                    branches::prefetch_read_data::<_, 0>(&self.arena[right_idx]);
+                                    curr_idx = right_idx;
+                                }
                                 None => {
                                     // New max check
                                     let mut new_max_found = false;
                                     let max_node = &self.arena[self.max_idx];
-                                    if &key > max_node.key() {
+                                    if likely(&key > max_node.key()) {
                                         new_max_found = true;
                                     }
 
@@ -767,7 +798,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
                                     let new_node_idx = self.arena.add(key, val);
 
                                     // New max update
-                                    if new_max_found {
+                                    if likely(new_max_found) {
                                         self.max_idx = new_node_idx;
                                     }
 
@@ -1142,10 +1173,12 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
             subtree_size += 1;
 
             if let Some(left_idx) = node.left_idx() {
+                branches::prefetch_read_data::<_, 0>(&self.arena[left_idx]);
                 subtree_worklist.push(U::checked_from(left_idx));
             }
 
             if let Some(right_idx) = node.right_idx() {
+                branches::prefetch_read_data::<_, 0>(&self.arena[right_idx]);
                 subtree_worklist.push(U::checked_from(right_idx));
             }
         }
@@ -1272,7 +1305,9 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
 
         // Iteratively re-assign all children
         while let Some((sorted_idx, parent_nrh)) = subtree_worklist.pop() {
-            let parent_node = &mut self.arena[sorted_arena_idxs[sorted_idx.usize()]];
+            let parent_node_idx = sorted_arena_idxs[sorted_idx.usize()];
+            branches::prefetch_write_data::<_, 0>(&self.arena[parent_node_idx]);
+            let parent_node = &mut self.arena[parent_node_idx];
 
             parent_node.set_left_idx(None);
             parent_node.set_right_idx(None);
