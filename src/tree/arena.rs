@@ -29,26 +29,26 @@ impl<K, V, U: Copy + SmallUnsigned + Ord + PartialEq + PartialOrd, const N: usiz
 {
     // TODO: is this function necessary?
     /// Const associated constructor for index scratch vector.
-    pub fn new_idx_vec() -> ArrayVec<U, N> {
-        ArrayVec::<U, N>::new()
+    pub const fn new_idx_vec() -> ArrayVec<U, N> {
+        ArrayVec::<U, N>::new_const()
     }
 
     /// Constructor.
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         let a = Arena {
-            vec: ArrayVec::<Option<Node<K, V, U>>, N>::new(),
+            vec: ArrayVec::<Option<Node<K, V, U>>, N>::new_const(),
 
             #[cfg(not(feature = "low_mem_insert"))]
-            free_list: ArrayVec::<U, N>::new(),
+            free_list: ArrayVec::<U, N>::new_const(),
         };
 
-        #[cfg(not(feature = "low_mem_insert"))]
-        debug_assert_eq!(0, a.free_list.len());
-        debug_assert_eq!(0, a.vec.len());
+        // #[cfg(not(feature = "low_mem_insert"))]
+        // debug_assert_eq!(0, a.free_list.len());
+        // debug_assert_eq!(0, a.vec.len());
 
-        #[cfg(not(feature = "low_mem_insert"))]
-        debug_assert_eq!(N, a.free_list.capacity());
-        debug_assert_eq!(N, a.vec.capacity());
+        // #[cfg(not(feature = "low_mem_insert"))]
+        // debug_assert_eq!(N, a.free_list.capacity());
+        // debug_assert_eq!(N, a.vec.capacity());
 
         a
     }

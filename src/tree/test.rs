@@ -754,7 +754,7 @@ fn test_intersect_cnt() {
     assert_eq!(sgt_1.intersect_cnt(&sgt_2), 0);
 }
 
-#[should_panic(expected = "Max stack item capacity (0xffff) exceeded!")]
+#[should_panic(expected = "Max stack item capacity (0xFFFF) exceeded!")]
 #[test]
 fn test_capacity_exceed() {
     const OVER_CAP: usize = (Idx::MAX as usize) + 1;

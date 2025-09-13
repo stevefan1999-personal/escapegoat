@@ -21,7 +21,7 @@ impl<'a, K: Ord, V, const N: usize> Iter<'a, K, V, N> {
     pub fn new(bst: &'a SgTree<K, V, N>) -> Self {
         let mut ordered_iter = Iter {
             bst,
-            idx_stack: ArrayVec::<usize, N>::new(),
+            idx_stack: ArrayVec::<usize, N>::new_const(),
             total_cnt: bst.len(),
             spent_cnt: 0,
         };

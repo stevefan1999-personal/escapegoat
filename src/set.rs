@@ -42,7 +42,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     ///
     /// let mut set: SgSet<i32, 10> = SgSet::new();
     /// ```
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         SgSet { bst: SgTree::new() }
     }
 
@@ -92,7 +92,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub fn rebal_param(&self) -> (f32, f32) {
+    pub const fn rebal_param(&self) -> (f32, f32) {
         self.bst.rebal_param()
     }
 

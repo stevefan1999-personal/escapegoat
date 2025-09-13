@@ -25,6 +25,7 @@ include = [
 micromath = "^2.1" # Has no dependenceis of it's own
 smallnum = "^0.4"  # Has no dependencies of it's own
 arrayvec = { version = "0.7.6", default-features = false }
+const_panic = { version = "0.2.15", features = ["rust_1_88"] }
 
 [dev-dependencies]
 criterion = "0.7"

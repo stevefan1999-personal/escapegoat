@@ -196,9 +196,9 @@ pub struct NodeSwapHistHelper<U, const N: usize> {
 
 impl<U: Ord + Copy + SmallUnsigned, const N: usize> NodeSwapHistHelper<U, N> {
     /// Constructor.
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         NodeSwapHistHelper {
-            history: ArrayVec::<(U, U), N>::new(),
+            history: ArrayVec::<(U, U), N>::new_const(),
         }
     }
 

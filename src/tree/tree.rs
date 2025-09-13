@@ -16,6 +16,7 @@ use super::node::{NodeGetHelper, NodeRebuildHelper};
 use super::node_dispatch::SmallNode;
 
 use arrayvec::ArrayVec;
+use const_panic::concat_panic;
 #[allow(unused_imports)] // micromath only used if `no_std`
 use micromath::F32Ext;
 use smallnum::SmallUnsigned;
@@ -50,13 +51,13 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
     // Public API ------------------------------------------------------------------------------------------------------
 
     /// Makes a new, empty `SgTree`.
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         if N > SgTree::<K, V, N>::max_capacity() {
-            panic!("Max stack item capacity (0x{:x}) exceeded!", Idx::MAX);
+            concat_panic!("Max stack item capacity (0x", {X}: Idx::MAX, ") exceeded!");
         }
 
         SgTree {
-            arena: Arena::<K, V, Idx, N>::default(),
+            arena: Arena::<K, V, Idx, N>::new(),
             opt_root_idx: None,
             max_idx: 0,
             min_idx: 0,
@@ -93,7 +94,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
 
     /// Get the current rebalance parameter, alpha, as a tuple of `(alpha_numerator, alpha_denominator)`.
     /// See [the corresponding setter method][SgTree::set_rebal_param] for more details.
-    pub fn rebal_param(&self) -> (f32, f32) {
+    pub const fn rebal_param(&self) -> (f32, f32) {
         (self.alpha_num, self.alpha_denom)
     }
 
@@ -423,13 +424,13 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
     }
 
     /// Returns the number of elements in the tree.
-    pub fn len(&self) -> usize {
+    pub const fn len(&self) -> usize {
         self.curr_size
     }
 
     /// Get the number of times this tree rebalanced itself (for testing and/or performance engineering).
     /// This count will wrap if `usize::MAX` is exceeded.
-    pub fn rebal_cnt(&self) -> usize {
+    pub const fn rebal_cnt(&self) -> usize {
         self.rebal_cnt
     }
 
@@ -475,9 +476,9 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
         &self,
         idx: usize,
     ) -> ArrayVec<U, N> {
-        let mut subtree_worklist = ArrayVec::<U, N>::new();
+        let mut subtree_worklist = ArrayVec::<U, N>::new_const();
         subtree_worklist.push(U::checked_from(idx));
-        let mut subtree_flattened = ArrayVec::<U, N>::new();
+        let mut subtree_flattened = ArrayVec::<U, N>::new_const();
         subtree_flattened.push(U::checked_from(idx));
 
         while let Some(idx) = subtree_worklist.pop() {
@@ -540,7 +541,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
         R: RangeBounds<T>,
         K: Borrow<T> + Ord,
     {
-        let mut node_idxs = ArrayVec::<usize, N>::new();
+        let mut node_idxs = ArrayVec::<usize, N>::new_const();
 
         for (idx, node) in self
             .arena
@@ -1132,7 +1133,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
     // Iterative subtree size computation
     #[cfg(not(feature = "fast_rebalance"))]
     fn get_subtree_size<U: SmallUnsigned>(&self, idx: usize) -> usize {
-        let mut subtree_worklist = ArrayVec::<U, N>::new();
+        let mut subtree_worklist = ArrayVec::<U, N>::new_const();
         subtree_worklist.push(U::checked_from(idx));
         let mut subtree_size = 0;
 
@@ -1239,7 +1240,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
         let sorted_last_idx = sorted_arena_idxs.len() - 1;
         let subtree_root_sorted_idx = sorted_last_idx / 2;
         let subtree_root_arena_idx = sorted_arena_idxs[subtree_root_sorted_idx];
-        let mut subtree_worklist = ArrayVec::<(U, NodeRebuildHelper<U>), N>::new();
+        let mut subtree_worklist = ArrayVec::<(U, NodeRebuildHelper<U>), N>::new_const();
 
         // Init worklist with middle node (balanced subtree root)
         subtree_worklist.push((
