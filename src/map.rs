@@ -43,7 +43,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     ///
     /// map.insert(1, "a");
     /// ```
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         SgMap { bst: SgTree::new() }
     }
 
@@ -93,7 +93,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub fn rebal_param(&self) -> (f32, f32) {
+    pub const fn rebal_param(&self) -> (f32, f32) {
         self.bst.rebal_param()
     }
 

@@ -351,12 +351,12 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
     }
 
     /// Returns `true` if the tree contains no elements.
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.opt_root_idx.is_none()
     }
 
     /// Returns `true` if the tree's capacity is filled.
-    pub fn is_full(&self) -> bool {
+    pub const fn is_full(&self) -> bool {
         debug_assert!(self.len() <= self.capacity());
         self.len() == self.capacity()
     }
