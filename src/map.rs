@@ -27,11 +27,11 @@ use crate::tree::{node::NodeGetHelper, Idx, SgError, SgTree};
 /// The majority of API examples and descriptions are adapted or directly copied from the standard library's [`BTreeMap`](https://doc.rust-lang.org/std/collections/struct.BTreeMap.html).
 /// The goal is to offer embedded developers familiar, ergonomic APIs on resource constrained systems that otherwise don't get the luxury of dynamic collections.
 #[derive(Default, Clone, Hash, PartialEq, Eq, Ord, PartialOrd)]
-pub struct SgMap<K: Ord + Default, V: Default, const N: usize> {
+pub struct SgMap<K: Ord, V, const N: usize> {
     pub(crate) bst: SgTree<K, V, N>,
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> SgMap<K, V, N> {
+impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// Makes a new, empty `SgMap`.
     ///
     /// # Examples
@@ -108,7 +108,7 @@ impl<K: Ord + Default, V: Default, const N: usize> SgMap<K, V, N> {
     ///
     /// assert!(map.capacity() == 10);
     /// ```
-    pub fn capacity(&self) -> usize {
+    pub const fn capacity(&self) -> usize {
         self.bst.capacity()
     }
 
@@ -1102,7 +1102,7 @@ impl<K: Ord + Default, V: Default, const N: usize> SgMap<K, V, N> {
 // Convenience Traits --------------------------------------------------------------------------------------------------
 
 // Debug
-impl<K: Default, V: Default, const N: usize> Debug for SgMap<K, V, N>
+impl<K, V, const N: usize> Debug for SgMap<K, V, N>
 where
     K: Ord + Debug,
     V: Debug,
@@ -1113,7 +1113,7 @@ where
 }
 
 // From array.
-impl<K: Default, V: Default, const N: usize> From<[(K, V); N]> for SgMap<K, V, N>
+impl<K, V, const N: usize> From<[(K, V); N]> for SgMap<K, V, N>
 where
     K: Ord,
 {
@@ -1139,7 +1139,7 @@ where
 }
 
 // Indexing
-impl<K: Default, V: Default, Q, const N: usize> Index<&Q> for SgMap<K, V, N>
+impl<K, V, Q, const N: usize> Index<&Q> for SgMap<K, V, N>
 where
     K: Borrow<Q> + Ord,
     Q: Ord + ?Sized,
@@ -1157,7 +1157,7 @@ where
 }
 
 // Construct from iterator.
-impl<K: Default, V: Default, const N: usize> FromIterator<(K, V)> for SgMap<K, V, N>
+impl<K, V, const N: usize> FromIterator<(K, V)> for SgMap<K, V, N>
 where
     K: Ord,
 {
@@ -1169,7 +1169,7 @@ where
 }
 
 // Extension from iterator.
-impl<K: Default, V: Default, const N: usize> Extend<(K, V)> for SgMap<K, V, N>
+impl<K, V, const N: usize> Extend<(K, V)> for SgMap<K, V, N>
 where
     K: Ord,
 {
@@ -1179,7 +1179,7 @@ where
 }
 
 // Extension from reference iterator.
-impl<'a, K: Default, V: Default, const N: usize> Extend<(&'a K, &'a V)> for SgMap<K, V, N>
+impl<'a, K, V, const N: usize> Extend<(&'a K, &'a V)> for SgMap<K, V, N>
 where
     K: Ord + Copy,
     V: Copy,
@@ -1192,7 +1192,7 @@ where
 // General Iterators ---------------------------------------------------------------------------------------------------
 
 // Reference iterator
-impl<'a, K: Ord + Default, V: Default, const N: usize> IntoIterator for &'a SgMap<K, V, N> {
+impl<'a, K: Ord, V, const N: usize> IntoIterator for &'a SgMap<K, V, N> {
     type Item = (&'a K, &'a V);
     type IntoIter = Iter<'a, K, V, N>;
 
@@ -1202,7 +1202,7 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> IntoIterator for &'a SgMa
 }
 
 // Consuming iterator
-impl<K: Ord + Default, V: Default, const N: usize> IntoIterator for SgMap<K, V, N> {
+impl<K: Ord, V, const N: usize> IntoIterator for SgMap<K, V, N> {
     type Item = (K, V);
     type IntoIter = IntoIter<K, V, N>;
 

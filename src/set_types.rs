@@ -4,8 +4,8 @@ use core::iter::FusedIterator;
 use crate::set::SgSet;
 use crate::tree::{Idx, IntoIter as TreeIntoIter, Iter as TreeIter, SmallNode};
 
+use arrayvec::ArrayVec;
 use smallnum::SmallUnsigned;
-use tinyvec::{ArrayVec, ArrayVecIterator};
 
 // General Iterators ---------------------------------------------------------------------------------------------------
 
@@ -13,11 +13,11 @@ use tinyvec::{ArrayVec, ArrayVecIterator};
 ///
 /// This `struct` is created by the [`iter`][crate::set::SgSet::iter] method on [`SgSet`][crate::set::SgSet].
 /// See its documentation for more.
-pub struct Iter<'a, T: Ord + Default, const N: usize> {
+pub struct Iter<'a, T: Ord, const N: usize> {
     ref_iter: TreeIter<'a, T, (), N>,
 }
 
-impl<'a, T: Ord + Default, const N: usize> Iter<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Iter<'a, T, N> {
     /// Construct reference iterator.
     pub(crate) fn new(set: &'a SgSet<T, N>) -> Self {
         Iter {
@@ -26,7 +26,7 @@ impl<'a, T: Ord + Default, const N: usize> Iter<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> Iterator for Iter<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Iterator for Iter<'a, T, N> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -34,23 +34,23 @@ impl<'a, T: Ord + Default, const N: usize> Iterator for Iter<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> ExactSizeIterator for Iter<'a, T, N> {
+impl<'a, T: Ord, const N: usize> ExactSizeIterator for Iter<'a, T, N> {
     fn len(&self) -> usize {
         self.ref_iter.len()
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> FusedIterator for Iter<'a, T, N> {}
+impl<'a, T: Ord, const N: usize> FusedIterator for Iter<'a, T, N> {}
 
 /// An owning iterator over the items of a [`SgSet`][crate::set::SgSet].
 ///
 /// This `struct` is created by the [`into_iter`][crate::set::SgSet::into_iter] method on [`SgSet`][crate::set::SgSet]
 /// (provided by the IntoIterator trait). See its documentation for more.
-pub struct IntoIter<T: Ord + Default, const N: usize> {
+pub struct IntoIter<T: Ord, const N: usize> {
     cons_iter: TreeIntoIter<T, (), N>,
 }
 
-impl<T: Ord + Default, const N: usize> IntoIter<T, N> {
+impl<T: Ord, const N: usize> IntoIter<T, N> {
     /// Construct owning iterator.
     pub(crate) fn new(set: SgSet<T, N>) -> Self {
         IntoIter {
@@ -59,7 +59,7 @@ impl<T: Ord + Default, const N: usize> IntoIter<T, N> {
     }
 }
 
-impl<T: Ord + Default, const N: usize> Iterator for IntoIter<T, N> {
+impl<T: Ord, const N: usize> Iterator for IntoIter<T, N> {
     type Item = T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -67,13 +67,13 @@ impl<T: Ord + Default, const N: usize> Iterator for IntoIter<T, N> {
     }
 }
 
-impl<T: Ord + Default, const N: usize> ExactSizeIterator for IntoIter<T, N> {
+impl<T: Ord, const N: usize> ExactSizeIterator for IntoIter<T, N> {
     fn len(&self) -> usize {
         self.cons_iter.len()
     }
 }
 
-impl<T: Ord + Default, const N: usize> FusedIterator for IntoIter<T, N> {}
+impl<T: Ord, const N: usize> FusedIterator for IntoIter<T, N> {}
 
 /*
 Workaround Note:
@@ -98,14 +98,14 @@ const PLACEHOLDER_2N: usize = 4096;
 ///
 /// This `struct` is created by the [`intersection`][crate::set::SgSet::difference] method on [`SgSet`][crate::set::SgSet].
 /// See its documentation for more.
-pub struct Intersection<'a, T: Ord + Default, const N: usize> {
-    pub(crate) inner: ArrayVecIterator<[Idx; N]>,
+pub struct Intersection<'a, T: Ord, const N: usize> {
+    pub(crate) inner: <ArrayVec<Idx, N> as IntoIterator>::IntoIter,
     set_this: &'a SgSet<T, N>,
     total_cnt: usize,
     spent_cnt: usize,
 }
 
-impl<'a, T: Ord + Default, const N: usize> Intersection<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Intersection<'a, T, N> {
     /// Construct `Intersection` iterator.
     /// Values that are both in `this` and `other`.
     pub(crate) fn new(this: &'a SgSet<T, N>, other: &SgSet<T, N>) -> Self {
@@ -145,7 +145,7 @@ impl<'a, T: Ord + Default, const N: usize> Intersection<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> Iterator for Intersection<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Iterator for Intersection<'a, T, N> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<&'a T> {
@@ -162,14 +162,14 @@ impl<'a, T: Ord + Default, const N: usize> Iterator for Intersection<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> ExactSizeIterator for Intersection<'a, T, N> {
+impl<'a, T: Ord, const N: usize> ExactSizeIterator for Intersection<'a, T, N> {
     fn len(&self) -> usize {
         debug_assert!(self.spent_cnt <= self.total_cnt);
         self.total_cnt - self.spent_cnt
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> FusedIterator for Intersection<'a, T, N> {}
+impl<'a, T: Ord, const N: usize> FusedIterator for Intersection<'a, T, N> {}
 
 // Difference Iterator -------------------------------------------------------------------------------------------------
 
@@ -180,14 +180,14 @@ impl<'a, T: Ord + Default, const N: usize> FusedIterator for Intersection<'a, T,
 ///
 /// This `struct` is created by the [`difference`][crate::set::SgSet::difference] method
 /// on [`SgSet`][crate::set::SgSet]. See its documentation for more.
-pub struct Difference<'a, T: Ord + Default, const N: usize> {
-    pub(crate) inner: ArrayVecIterator<[Idx; N]>,
+pub struct Difference<'a, T: Ord, const N: usize> {
+    pub(crate) inner: <ArrayVec<Idx, N> as IntoIterator>::IntoIter,
     set_this: &'a SgSet<T, N>,
     total_cnt: usize,
     spent_cnt: usize,
 }
 
-impl<'a, T: Ord + Default, const N: usize> Difference<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Difference<'a, T, N> {
     /// Construct `Difference` iterator.
     /// Values that are in `this` but not in `other`.
     pub(crate) fn new(this: &'a SgSet<T, N>, other: &SgSet<T, N>) -> Self {
@@ -210,7 +210,7 @@ impl<'a, T: Ord + Default, const N: usize> Difference<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> Iterator for Difference<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Iterator for Difference<'a, T, N> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<&'a T> {
@@ -227,14 +227,14 @@ impl<'a, T: Ord + Default, const N: usize> Iterator for Difference<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> ExactSizeIterator for Difference<'a, T, N> {
+impl<'a, T: Ord, const N: usize> ExactSizeIterator for Difference<'a, T, N> {
     fn len(&self) -> usize {
         debug_assert!(self.spent_cnt <= self.total_cnt);
         self.total_cnt - self.spent_cnt
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> FusedIterator for Difference<'a, T, N> {}
+impl<'a, T: Ord, const N: usize> FusedIterator for Difference<'a, T, N> {}
 
 // Symmetric Difference Iterator ---------------------------------------------------------------------------------------
 
@@ -245,15 +245,15 @@ impl<'a, T: Ord + Default, const N: usize> FusedIterator for Difference<'a, T, N
 ///
 /// This `struct` is created by the [`symmetric_difference`][crate::set::SgSet::symmetric_difference]
 /// method on [`SgSet`][crate::set::SgSet]. See its documentation for more.
-pub struct SymmetricDifference<'a, T: Ord + Default, const N: usize> {
-    pub(crate) inner: ArrayVecIterator<[(Idx, bool); PLACEHOLDER_2N]>, // TODO: placeholder
+pub struct SymmetricDifference<'a, T: Ord, const N: usize> {
+    pub(crate) inner: <ArrayVec<(Idx, bool), PLACEHOLDER_2N> as IntoIterator>::IntoIter, // TODO: placeholder
     set_this: &'a SgSet<T, N>,
     set_other: &'a SgSet<T, N>,
     total_cnt: usize,
     spent_cnt: usize,
 }
 
-impl<'a, T: Ord + Default, const N: usize> SymmetricDifference<'a, T, N> {
+impl<'a, T: Ord, const N: usize> SymmetricDifference<'a, T, N> {
     /// Construct `SymmetricDifference` iterator.
     /// Values that are in `this` or in `other` but not in both.
     pub(crate) fn new(this: &'a SgSet<T, N>, other: &'a SgSet<T, N>) -> Self {
@@ -290,7 +290,7 @@ impl<'a, T: Ord + Default, const N: usize> SymmetricDifference<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> Iterator for SymmetricDifference<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Iterator for SymmetricDifference<'a, T, N> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<&'a T> {
@@ -316,14 +316,14 @@ impl<'a, T: Ord + Default, const N: usize> Iterator for SymmetricDifference<'a, 
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> ExactSizeIterator for SymmetricDifference<'a, T, N> {
+impl<'a, T: Ord, const N: usize> ExactSizeIterator for SymmetricDifference<'a, T, N> {
     fn len(&self) -> usize {
         debug_assert!(self.spent_cnt <= self.total_cnt);
         self.total_cnt - self.spent_cnt
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> FusedIterator for SymmetricDifference<'a, T, N> {}
+impl<'a, T: Ord, const N: usize> FusedIterator for SymmetricDifference<'a, T, N> {}
 
 // Union Iterator ------------------------------------------------------------------------------------------------------
 
@@ -334,15 +334,15 @@ impl<'a, T: Ord + Default, const N: usize> FusedIterator for SymmetricDifference
 ///
 /// This `struct` is created by the [`union`][crate::set::SgSet::difference] method on [`SgSet`][crate::set::SgSet].
 /// See its documentation for more.
-pub struct Union<'a, T: Ord + Default, const N: usize> {
-    pub(crate) inner: ArrayVecIterator<[(Idx, bool); PLACEHOLDER_2N]>,
+pub struct Union<'a, T: Ord, const N: usize> {
+    pub(crate) inner: <ArrayVec<(Idx, bool), PLACEHOLDER_2N> as IntoIterator>::IntoIter,
     set_this: &'a SgSet<T, N>,
     set_other: &'a SgSet<T, N>,
     total_cnt: usize,
     spent_cnt: usize,
 }
 
-impl<'a, T: Ord + Default, const N: usize> Union<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Union<'a, T, N> {
     /// Construct `Union` iterator.
     /// Values in `this` or `other`, without duplicates.
     pub(crate) fn new(this: &'a SgSet<T, N>, other: &'a SgSet<T, N>) -> Self {
@@ -377,7 +377,7 @@ impl<'a, T: Ord + Default, const N: usize> Union<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> Iterator for Union<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Iterator for Union<'a, T, N> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<&'a T> {
@@ -403,14 +403,14 @@ impl<'a, T: Ord + Default, const N: usize> Iterator for Union<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> ExactSizeIterator for Union<'a, T, N> {
+impl<'a, T: Ord, const N: usize> ExactSizeIterator for Union<'a, T, N> {
     fn len(&self) -> usize {
         debug_assert!(self.spent_cnt <= self.total_cnt);
         self.total_cnt - self.spent_cnt
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> FusedIterator for Union<'a, T, N> {}
+impl<'a, T: Ord, const N: usize> FusedIterator for Union<'a, T, N> {}
 
 // Range APIs ----------------------------------------------------------------------------------------------------------
 
@@ -420,12 +420,12 @@ impl<'a, T: Ord + Default, const N: usize> FusedIterator for Union<'a, T, N> {}
 /// See its documentation for more.
 ///
 /// [`range`]: SgSet::range
-pub struct Range<'a, T: Ord + Default, const N: usize> {
+pub struct Range<'a, T: Ord, const N: usize> {
     pub(crate) table: &'a SgSet<T, N>,
-    pub(crate) node_idx_iter: <ArrayVec<[usize; N]> as IntoIterator>::IntoIter,
+    pub(crate) node_idx_iter: <ArrayVec<usize, N> as IntoIterator>::IntoIter,
 }
 
-impl<'a, T: Ord + Default, const N: usize> Iterator for Range<'a, T, N> {
+impl<'a, T: Ord, const N: usize> Iterator for Range<'a, T, N> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -435,7 +435,7 @@ impl<'a, T: Ord + Default, const N: usize> Iterator for Range<'a, T, N> {
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> DoubleEndedIterator for Range<'a, T, N> {
+impl<'a, T: Ord, const N: usize> DoubleEndedIterator for Range<'a, T, N> {
     fn next_back(&mut self) -> Option<Self::Item> {
         let node_idx = self.node_idx_iter.next_back()?;
         let node = &self.table.bst.arena[node_idx];
@@ -443,4 +443,4 @@ impl<'a, T: Ord + Default, const N: usize> DoubleEndedIterator for Range<'a, T, 
     }
 }
 
-impl<'a, T: Ord + Default, const N: usize> FusedIterator for Range<'a, T, N> {}
+impl<'a, T: Ord, const N: usize> FusedIterator for Range<'a, T, N> {}

@@ -1,6 +1,6 @@
 use core::iter::FusedIterator;
 
-use tinyvec::ArrayVec;
+use arrayvec::ArrayVec;
 
 use super::node::Node;
 use super::node_dispatch::SmallNode;
@@ -10,18 +10,18 @@ use super::tree::{Idx, SgTree};
 
 /// Uses iterative in-order tree traversal algorithm.
 /// Maintains a small stack of arena indexes (won't contain all indexes simultaneously for a balanced tree).
-pub struct Iter<'a, K: Default, V: Default, const N: usize> {
+pub struct Iter<'a, K, V, const N: usize> {
     bst: &'a SgTree<K, V, N>,
-    idx_stack: ArrayVec<[usize; N]>,
+    idx_stack: ArrayVec<usize, N>,
     total_cnt: usize,
     spent_cnt: usize,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iter<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iter<'a, K, V, N> {
     pub fn new(bst: &'a SgTree<K, V, N>) -> Self {
         let mut ordered_iter = Iter {
             bst,
-            idx_stack: ArrayVec::<[usize; N]>::new(),
+            idx_stack: ArrayVec::<usize, N>::new(),
             total_cnt: bst.len(),
             spent_cnt: 0,
         };
@@ -47,7 +47,7 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iter<'a, K, V, N> {
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Iter<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iterator for Iter<'a, K, V, N> {
     type Item = (&'a K, &'a V);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -80,14 +80,14 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Iter<'a, K, 
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for Iter<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> ExactSizeIterator for Iter<'a, K, V, N> {
     fn len(&self) -> usize {
         debug_assert!(self.spent_cnt <= self.total_cnt);
         self.total_cnt - self.spent_cnt
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for Iter<'a, K, V, N> {}
+impl<'a, K: Ord, V, const N: usize> FusedIterator for Iter<'a, K, V, N> {}
 
 // Mutable Reference Iterator ------------------------------------------------------------------------------------------
 
@@ -95,7 +95,7 @@ pub struct IterMut<'a, K, V, const N: usize> {
     arena_iter_mut: core::slice::IterMut<'a, Option<Node<K, V, Idx>>>,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> IterMut<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> IterMut<'a, K, V, N> {
     pub fn new(bst: &'a mut SgTree<K, V, N>) -> Self {
         bst.sort_arena();
         IterMut {
@@ -104,7 +104,7 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> IterMut<'a, K, V, N> {
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for IterMut<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iterator for IterMut<'a, K, V, N> {
     type Item = (&'a K, &'a mut V);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -115,9 +115,7 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for IterMut<'a, 
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> DoubleEndedIterator
-    for IterMut<'a, K, V, N>
-{
+impl<'a, K: Ord, V, const N: usize> DoubleEndedIterator for IterMut<'a, K, V, N> {
     fn next_back(&mut self) -> Option<Self::Item> {
         match self.arena_iter_mut.next_back() {
             Some(Some(node)) => Some(node.get_mut()),
@@ -126,28 +124,28 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> DoubleEndedIterator
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for IterMut<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> ExactSizeIterator for IterMut<'a, K, V, N> {
     fn len(&self) -> usize {
         self.arena_iter_mut.len()
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for IterMut<'a, K, V, N> {}
+impl<'a, K: Ord, V, const N: usize> FusedIterator for IterMut<'a, K, V, N> {}
 
 // Consuming Iterator --------------------------------------------------------------------------------------------------
 
 /// Cheats a little by using internal flattening logic to sort, instead of re-implementing proper traversal.
 /// Maintains a shrinking list of arena indexes, initialized with all of them.
-pub struct IntoIter<K: Default, V: Default, const N: usize> {
+pub struct IntoIter<K, V, const N: usize> {
     bst: SgTree<K, V, N>,
-    sorted_idxs: ArrayVec<[usize; N]>,
+    sorted_idxs: ArrayVec<usize, N>,
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> IntoIter<K, V, N> {
+impl<K: Ord, V, const N: usize> IntoIter<K, V, N> {
     pub fn new(bst: SgTree<K, V, N>) -> Self {
         let mut ordered_iter = IntoIter {
             bst,
-            sorted_idxs: ArrayVec::<[usize; N]>::new(),
+            sorted_idxs: ArrayVec::<usize, N>::new(),
         };
 
         if let Some(root_idx) = ordered_iter.bst.opt_root_idx {
@@ -159,7 +157,7 @@ impl<K: Ord + Default, V: Default, const N: usize> IntoIter<K, V, N> {
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> Iterator for IntoIter<K, V, N> {
+impl<K: Ord, V, const N: usize> Iterator for IntoIter<K, V, N> {
     type Item = (K, V);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -176,10 +174,10 @@ impl<K: Ord + Default, V: Default, const N: usize> Iterator for IntoIter<K, V, N
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for IntoIter<K, V, N> {
+impl<K: Ord, V, const N: usize> ExactSizeIterator for IntoIter<K, V, N> {
     fn len(&self) -> usize {
         self.sorted_idxs.len()
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> FusedIterator for IntoIter<K, V, N> {}
+impl<K: Ord, V, const N: usize> FusedIterator for IntoIter<K, V, N> {}

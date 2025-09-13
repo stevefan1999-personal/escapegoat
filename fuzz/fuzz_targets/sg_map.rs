@@ -103,7 +103,7 @@ enum MapMethod<K: Ord + Debug, V: Debug> {
 
 // Harness Helpers -----------------------------------------------------------------------------------------------------
 
-fn checked_get_len<K: Ord + Default, V: Default, const N: usize>(
+fn checked_get_len<K: Ord , V, const N: usize>(
     sg_map: &SgMap<K, V, N>,
     bt_map: &BTreeMap<K, V>,
 ) -> usize {
@@ -114,7 +114,7 @@ fn checked_get_len<K: Ord + Default, V: Default, const N: usize>(
 }
 
 // TODO: is this an ideal way to generate a valid range?
-fn gen_valid_range<K: Ord + Default + Debug + Int, V: Default, const N: usize>(
+fn gen_valid_range<K: Ord  + Debug + Int, V, const N: usize>(
     sg_map: &SgMap<K, V, N>,
     bt_map: &BTreeMap<K, V>,
     bitstream: &[u8],
@@ -151,7 +151,7 @@ fn gen_valid_range<K: Ord + Default + Debug + Int, V: Default, const N: usize>(
     opt_range
 }
 
-fn assert_len_unchanged<K: Ord + Default, V: Default, const N: usize>(
+fn assert_len_unchanged<K: Ord , V, const N: usize>(
     sg_map: &SgMap<K, V, N>,
     bt_map: &BTreeMap<K, V>,
     old_len: usize,
@@ -159,7 +159,7 @@ fn assert_len_unchanged<K: Ord + Default, V: Default, const N: usize>(
     assert_eq!(checked_get_len(sg_map, bt_map), old_len);
 }
 
-fn assert_eq_entry<K: Ord + Default + Debug, V: Default + Debug, const N: usize>(
+fn assert_eq_entry<K: Ord  + Debug, V:  Debug, const N: usize>(
     sg_entry: &SgEntry<K, V, N>,
     bt_entry: &BtEntry<K, V>,
 ) {

@@ -1,7 +1,7 @@
 use core::mem::size_of_val;
 
+use arrayvec::ArrayVec;
 use scapegoat::SgSet;
-use tinyvec::array_vec;
 
 const U8_BUF_LEN: usize = 32;
 
@@ -28,15 +28,9 @@ fn main() {
     //     &my_vec[0..5] is the first 5 elements
     //     &my_vec[1..] is all but the first element
     //     &my_vec[..] is all elements
-    let bad_food_vec = array_vec![
-        [u8; U8_BUF_LEN] =>
-        0xB, 0xA, 0xA, 0xD, 0xF, 0x0, 0x0, 0xD
-    ];
+    let bad_food_vec = ArrayVec::from([0xB, 0xA, 0xA, 0xD, 0xF, 0x0, 0x0, 0xD]);
 
-    let bad_dude_vec = array_vec![
-        [u8; U8_BUF_LEN] =>
-        0xB, 0xA, 0xA, 0xD, 0xD, 0x0, 0x0, 0xD
-    ];
+    let bad_dude_vec = ArrayVec::from([0xB, 0xA, 0xA, 0xD, 0xD, 0x0, 0x0, 0xD]);
 
     // We're effectively searching for a [u8; 8] present
     assert_eq!(

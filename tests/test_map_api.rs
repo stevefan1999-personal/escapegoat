@@ -186,10 +186,10 @@ fn test_map_iter_mut() {
 fn test_map_iter_mut_rand() {
     const CAPACITY: usize = 500;
     let mut sgm = SgMap::<isize, isize, CAPACITY>::new();
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     for _ in 0..CAPACITY {
-        sgm.insert(rng.gen(), 0);
+        sgm.insert(rng.random::<i64>() as isize, 0);
     }
 
     let min_key = *sgm.first_key().unwrap();

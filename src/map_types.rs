@@ -3,7 +3,7 @@ use core::fmt;
 use core::iter::{FusedIterator, Peekable};
 use core::ops::RangeBounds;
 
-use tinyvec::ArrayVec;
+use arrayvec::ArrayVec;
 
 use crate::map::SgMap;
 use crate::tree::{
@@ -17,11 +17,11 @@ use crate::tree::{
 /// This `struct` is created by the [`iter`][crate::map::SgMap::iter] method on [`SgMap`][crate::map::SgMap].
 /// documentation for more.
 ///
-pub struct Iter<'a, T: Ord + Default, V: Default, const N: usize> {
+pub struct Iter<'a, T: Ord, V, const N: usize> {
     ref_iter: TreeIter<'a, T, V, N>,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iter<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iter<'a, K, V, N> {
     /// Construct reference iterator.
     pub(crate) fn new(map: &'a SgMap<K, V, N>) -> Self {
         Iter {
@@ -30,7 +30,7 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iter<'a, K, V, N> {
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Iter<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iterator for Iter<'a, K, V, N> {
     type Item = (&'a K, &'a V);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -38,23 +38,23 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Iter<'a, K, 
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for Iter<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> ExactSizeIterator for Iter<'a, K, V, N> {
     fn len(&self) -> usize {
         self.ref_iter.len()
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for Iter<'a, K, V, N> {}
+impl<'a, K: Ord, V, const N: usize> FusedIterator for Iter<'a, K, V, N> {}
 
 /// An owning iterator over the entries of a [`SgMap`][crate::map::SgMap].
 ///
 /// This `struct` is created by the [`into_iter`][crate::map::SgMap::into_iter] method on [`SgMap`][crate::map::SgMap].
 /// documentation for more.
-pub struct IntoIter<K: Ord + Default, V: Default, const N: usize> {
+pub struct IntoIter<K: Ord, V, const N: usize> {
     cons_iter: TreeIntoIter<K, V, N>,
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> IntoIter<K, V, N> {
+impl<K: Ord, V, const N: usize> IntoIter<K, V, N> {
     /// Construct owning iterator.
     pub(crate) fn new(map: SgMap<K, V, N>) -> Self {
         IntoIter {
@@ -63,7 +63,7 @@ impl<K: Ord + Default, V: Default, const N: usize> IntoIter<K, V, N> {
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> Iterator for IntoIter<K, V, N> {
+impl<K: Ord, V, const N: usize> Iterator for IntoIter<K, V, N> {
     type Item = (K, V);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -71,23 +71,23 @@ impl<K: Ord + Default, V: Default, const N: usize> Iterator for IntoIter<K, V, N
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for IntoIter<K, V, N> {
+impl<K: Ord, V, const N: usize> ExactSizeIterator for IntoIter<K, V, N> {
     fn len(&self) -> usize {
         self.cons_iter.len()
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> FusedIterator for IntoIter<K, V, N> {}
+impl<K: Ord, V, const N: usize> FusedIterator for IntoIter<K, V, N> {}
 
 /// An mutable iterator over the entries of a [`SgMap`][crate::map::SgMap].
 ///
 /// This `struct` is created by the [`iter_mut`][crate::map::SgMap::iter_mut] method on [`SgMap`][crate::map::SgMap].
 /// documentation for more.
-pub struct IterMut<'a, K: Ord + Default, V: Default, const N: usize> {
+pub struct IterMut<'a, K: Ord, V, const N: usize> {
     mut_iter: TreeIterMut<'a, K, V, N>,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> IterMut<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> IterMut<'a, K, V, N> {
     /// Construct owning iterator.
     pub(crate) fn new(map: &'a mut SgMap<K, V, N>) -> Self {
         IterMut {
@@ -96,7 +96,7 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> IterMut<'a, K, V, N> {
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for IterMut<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iterator for IterMut<'a, K, V, N> {
     type Item = (&'a K, &'a mut V);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -104,13 +104,13 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for IterMut<'a, 
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for IterMut<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> ExactSizeIterator for IterMut<'a, K, V, N> {
     fn len(&self) -> usize {
         self.mut_iter.len()
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for IterMut<'a, K, V, N> {}
+impl<'a, K: Ord, V, const N: usize> FusedIterator for IterMut<'a, K, V, N> {}
 
 // Key Iterators -------------------------------------------------------------------------------------------------------
 
@@ -120,11 +120,11 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for IterMut
 ///
 /// This `struct` is created by the [`keys`][crate::map::SgMap::keys] method on [`SgMap`][crate::map::SgMap].
 /// See its documentation for more.
-pub struct Keys<'a, K: Ord + Default, V: Default, const N: usize> {
+pub struct Keys<'a, K: Ord, V, const N: usize> {
     pub(crate) inner: Iter<'a, K, V, N>,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Keys<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iterator for Keys<'a, K, V, N> {
     type Item = &'a K;
 
     fn next(&mut self) -> Option<&'a K> {
@@ -132,23 +132,23 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Keys<'a, K, 
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for Keys<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> ExactSizeIterator for Keys<'a, K, V, N> {
     fn len(&self) -> usize {
         self.inner.len()
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for Keys<'a, K, V, N> {}
+impl<'a, K: Ord, V, const N: usize> FusedIterator for Keys<'a, K, V, N> {}
 
 /// An owning iterator over the keys of a [`SgMap`][crate::map::SgMap].
 ///
 /// This `struct` is created by the [`into_keys`][crate::map::SgMap::into_keys] method on [`SgMap`][crate::map::SgMap].
 /// See its documentation for more.
-pub struct IntoKeys<K: Ord + Default, V: Default, const N: usize> {
+pub struct IntoKeys<K: Ord, V, const N: usize> {
     pub(crate) inner: IntoIter<K, V, N>,
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> Iterator for IntoKeys<K, V, N> {
+impl<K: Ord, V, const N: usize> Iterator for IntoKeys<K, V, N> {
     type Item = K;
 
     fn next(&mut self) -> Option<K> {
@@ -156,13 +156,13 @@ impl<K: Ord + Default, V: Default, const N: usize> Iterator for IntoKeys<K, V, N
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for IntoKeys<K, V, N> {
+impl<K: Ord, V, const N: usize> ExactSizeIterator for IntoKeys<K, V, N> {
     fn len(&self) -> usize {
         self.inner.len()
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> FusedIterator for IntoKeys<K, V, N> {}
+impl<K: Ord, V, const N: usize> FusedIterator for IntoKeys<K, V, N> {}
 
 // Value Iterators -----------------------------------------------------------------------------------------------------
 
@@ -172,11 +172,11 @@ impl<K: Ord + Default, V: Default, const N: usize> FusedIterator for IntoKeys<K,
 ///
 /// This `struct` is created by the [`values`][crate::map::SgMap::values] method on [`SgMap`][crate::map::SgMap].
 /// See its documentation for more.
-pub struct Values<'a, K: Ord + Default, V: Default, const N: usize> {
+pub struct Values<'a, K: Ord, V, const N: usize> {
     pub(crate) inner: Iter<'a, K, V, N>,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Values<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iterator for Values<'a, K, V, N> {
     type Item = &'a V;
 
     fn next(&mut self) -> Option<&'a V> {
@@ -184,23 +184,23 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Values<'a, K
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for Values<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> ExactSizeIterator for Values<'a, K, V, N> {
     fn len(&self) -> usize {
         self.inner.len()
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for Values<'a, K, V, N> {}
+impl<'a, K: Ord, V, const N: usize> FusedIterator for Values<'a, K, V, N> {}
 
 /// An owning iterator over the values of a [`SgMap`][crate::map::SgMap].
 ///
 /// This `struct` is created by the [`into_values`][crate::map::SgMap::into_values] method on [`SgMap`][crate::map::SgMap].
 /// See its documentation for more.
-pub struct IntoValues<K: Ord + Default, V: Default, const N: usize> {
+pub struct IntoValues<K: Ord, V, const N: usize> {
     pub(crate) inner: IntoIter<K, V, N>,
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> Iterator for IntoValues<K, V, N> {
+impl<K: Ord, V, const N: usize> Iterator for IntoValues<K, V, N> {
     type Item = V;
 
     fn next(&mut self) -> Option<V> {
@@ -208,23 +208,23 @@ impl<K: Ord + Default, V: Default, const N: usize> Iterator for IntoValues<K, V,
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> ExactSizeIterator for IntoValues<K, V, N> {
+impl<K: Ord, V, const N: usize> ExactSizeIterator for IntoValues<K, V, N> {
     fn len(&self) -> usize {
         self.inner.len()
     }
 }
 
-impl<K: Ord + Default, V: Default, const N: usize> FusedIterator for IntoValues<K, V, N> {}
+impl<K: Ord, V, const N: usize> FusedIterator for IntoValues<K, V, N> {}
 
 /// A mutable iterator over the values of a [`SgMap`][crate::map::SgMap].
 ///
 /// This `struct` is created by the [`values_mut`][crate::map::SgMap::values_mut] method on [`SgMap`][crate::map::SgMap].
 /// See its documentation for more.
-pub struct ValuesMut<'a, K: Ord + Default, V: Default, const N: usize> {
+pub struct ValuesMut<'a, K: Ord, V, const N: usize> {
     pub(crate) inner: IterMut<'a, K, V, N>,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for ValuesMut<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iterator for ValuesMut<'a, K, V, N> {
     type Item = &'a mut V;
 
     fn next(&mut self) -> Option<&'a mut V> {
@@ -232,29 +232,27 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for ValuesMut<'a
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> ExactSizeIterator
-    for ValuesMut<'a, K, V, N>
-{
+impl<'a, K: Ord, V, const N: usize> ExactSizeIterator for ValuesMut<'a, K, V, N> {
     fn len(&self) -> usize {
         self.inner.len()
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for ValuesMut<'a, K, V, N> {}
+impl<'a, K: Ord, V, const N: usize> FusedIterator for ValuesMut<'a, K, V, N> {}
 
 // Entry APIs ----------------------------------------------------------------------------------------------------------
 
 /// A view into a single entry in a map, which may either be vacant or occupied.
 ///
 /// This `enum` is constructed from the [`SgMap::entry`] method on [`SgMap`].
-pub enum Entry<'a, K: Ord + Default, V: Default, const N: usize> {
+pub enum Entry<'a, K: Ord, V, const N: usize> {
     /// A vacant entry.
     Vacant(VacantEntry<'a, K, V, N>),
     /// An occupied entry.
     Occupied(OccupiedEntry<'a, K, V, N>),
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Entry<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Entry<'a, K, V, N> {
     /// Ensures a value is in the entry by inserting the default if empty, and returns a mutable
     /// reference to the value in the entry.
     ///
@@ -370,7 +368,9 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Entry<'a, K, V, N> {
             Entry::Vacant(entry) => Entry::Vacant(entry),
         }
     }
+}
 
+impl<'a, K: Ord, V: Default, const N: usize> Entry<'a, K, V, N> {
     /// Ensures a value is in the entry by inserting the default value if empty,
     /// and returns a mutable reference to the value in the entry.
     ///
@@ -394,12 +394,12 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Entry<'a, K, V, N> {
 
 /// A view into a vacant entry in a [`SgMap`][crate::map::SgMap].
 /// It is part of the [`Entry`] enum.
-pub struct VacantEntry<'a, K: Ord + Default, V: Default, const N: usize> {
+pub struct VacantEntry<'a, K: Ord, V, const N: usize> {
     pub(super) key: K,
     pub(super) table: &'a mut SgMap<K, V, N>,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> VacantEntry<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> VacantEntry<'a, K, V, N> {
     /// Gets a reference to the key that would be used when inserting a value
     /// through the [`VacantEntry`][crate::map_types::VacantEntry].
     ///
@@ -461,12 +461,12 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> VacantEntry<'a, K, V, N> 
 
 /// A view into an occupied entry in a [`SgMap`][crate::map::SgMap].
 /// It is part of the [`Entry`] enum.
-pub struct OccupiedEntry<'a, K: Ord + Default, V: Default, const N: usize> {
+pub struct OccupiedEntry<'a, K: Ord, V, const N: usize> {
     pub(super) node_idx: usize,
     pub(super) table: &'a mut SgMap<K, V, N>,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> OccupiedEntry<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> OccupiedEntry<'a, K, V, N> {
     /// Gets a reference to the key in the entry.
     ///
     /// # Examples
@@ -628,16 +628,14 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> OccupiedEntry<'a, K, V, N
 /// The error returned by [`try_insert_std`](SgMap::try_insert_std) when the key already exists.
 ///
 /// Contains the occupied entry, and the value that was not inserted.
-pub struct OccupiedError<'a, K: 'a + Ord + Default, V: 'a + Default, const N: usize> {
+pub struct OccupiedError<'a, K: 'a + Ord, V: 'a, const N: usize> {
     /// The entry in the map that was already occupied.
     pub entry: OccupiedEntry<'a, K, V, N>,
     /// The value which was not inserted, because the entry was already occupied.
     pub value: V,
 }
 
-impl<K: fmt::Debug + Ord + Default, V: fmt::Debug + Default, const N: usize> fmt::Debug
-    for OccupiedError<'_, K, V, N>
-{
+impl<K: fmt::Debug + Ord, V: fmt::Debug, const N: usize> fmt::Debug for OccupiedError<'_, K, V, N> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("OccupiedError")
             .field("key", self.entry.key())
@@ -647,7 +645,7 @@ impl<K: fmt::Debug + Ord + Default, V: fmt::Debug + Default, const N: usize> fmt
     }
 }
 
-impl<'a, K: fmt::Debug + Ord + Default, V: fmt::Debug + Default, const N: usize> fmt::Display
+impl<'a, K: fmt::Debug + Ord, V: fmt::Debug, const N: usize> fmt::Display
     for OccupiedError<'a, K, V, N>
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -667,19 +665,19 @@ impl<'a, K: fmt::Debug + Ord + Default, V: fmt::Debug + Default, const N: usize>
 ///
 /// This `struct` is created by the [`range`][`crate::map::SgMap::range`] method on [`SgMap`][crate::map::SgMap]. See its
 /// documentation for more.
-pub struct Range<'a, K: Ord + Default, V: Default, const N: usize> {
+pub struct Range<'a, K: Ord, V, const N: usize> {
     pub(crate) table: &'a SgMap<K, V, N>,
-    pub(crate) node_idx_iter: <ArrayVec<[usize; N]> as IntoIterator>::IntoIter,
+    pub(crate) node_idx_iter: <ArrayVec<usize, N> as IntoIterator>::IntoIter,
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Range<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Range<'a, K, V, N> {
     fn to_node_ref(&self, idx: usize) -> (&'a K, &'a V) {
         let node = &self.table.bst.arena[idx];
         (node.key(), node.val())
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Range<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> Iterator for Range<'a, K, V, N> {
     type Item = (&'a K, &'a V);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -688,14 +686,14 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> Iterator for Range<'a, K,
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> DoubleEndedIterator for Range<'a, K, V, N> {
+impl<'a, K: Ord, V, const N: usize> DoubleEndedIterator for Range<'a, K, V, N> {
     fn next_back(&mut self) -> Option<Self::Item> {
         let node_idx = self.node_idx_iter.next_back()?;
         Some(self.to_node_ref(node_idx))
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for Range<'a, K, V, N> {}
+impl<'a, K: Ord, V, const N: usize> FusedIterator for Range<'a, K, V, N> {}
 
 /// A mutable iterator over a sub-range of entries in a [`SgMap`].
 ///
@@ -703,7 +701,7 @@ impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for Range<'
 /// documentation for more.
 ///
 /// [`range_mut`]: SgMap::range_mut
-pub struct RangeMut<'a, K: Ord + Default, V: Default, const N: usize> {
+pub struct RangeMut<'a, K: Ord, V, const N: usize> {
     inner: RangeMutPeekable<'a, K, V, N>,
     last: Option<RangeMutLast<'a, K, V, N>>,
     total_cnt: usize,
@@ -717,14 +715,13 @@ type RangeMutPeekable<'a, K, V, const N: usize> = Peekable<TreeIterMut<'a, K, V,
 
 impl<'a, K, V, const N: usize> RangeMut<'a, K, V, N>
 where
-    K: Ord + Default,
-    V: Default,
+    K: Ord,
 {
     // Constructor
     pub(crate) fn new<T, R>(map: &'a mut SgMap<K, V, N>, range: &R) -> Self
     where
         T: Ord + ?Sized,
-        K: Borrow<T> + Ord + Default,
+        K: Borrow<T> + Ord,
         R: RangeBounds<T>,
     {
         let len = RangeMut::compute_len(map, range);
@@ -742,7 +739,7 @@ where
     fn compute_len<T, R>(map: &SgMap<K, V, N>, range: &R) -> usize
     where
         T: Ord + ?Sized,
-        K: Borrow<T> + Ord + Default,
+        K: Borrow<T> + Ord,
         R: RangeBounds<T>,
     {
         let mut peekable = map.bst.iter().peekable();
@@ -779,7 +776,7 @@ where
     )
     where
         T: Ord + ?Sized,
-        K: Borrow<T> + Ord + Default,
+        K: Borrow<T> + Ord,
         R: RangeBounds<T>,
     {
         let mut peekable = map.bst.iter_mut().peekable();
@@ -807,8 +804,7 @@ where
 
 impl<'a, K, V, const N: usize> Iterator for RangeMut<'a, K, V, N>
 where
-    K: Ord + Default,
-    V: Default,
+    K: Ord,
 {
     type Item = (&'a K, &'a mut V);
 
@@ -827,8 +823,7 @@ where
 
 impl<'a, K, V, const N: usize> DoubleEndedIterator for RangeMut<'a, K, V, N>
 where
-    K: Ord + Default,
-    V: Default,
+    K: Ord,
 {
     fn next_back(&mut self) -> Option<Self::Item> {
         if self.spent_cnt < self.total_cnt {
@@ -843,14 +838,14 @@ where
     }
 }
 
-impl<'a, K: Ord + Default, V: Default, const N: usize> FusedIterator for RangeMut<'a, K, V, N> {}
+impl<'a, K: Ord, V, const N: usize> FusedIterator for RangeMut<'a, K, V, N> {}
 
 /*
 // TODO: does commit to this interface limit potential optimizations?
 impl<'a, K, V, const N: usize> ExactSizeIterator for RangeMut<'a, K, V, N>
 where
-    K: Ord + Default,
-    V: Default,
+    K: Ord ,
+    V,
 {
     fn len(&self) -> usize {
         debug_assert!(self.spent_cnt <= self.total_cnt);

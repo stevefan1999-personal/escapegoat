@@ -40,7 +40,7 @@ Other features:
 
 ```rust
 use scapegoat::SgMap;
-use tinyvec::{array_vec, ArrayVec};
+use arrayvec::ArrayVec;
 
 // This const is an argument to each generic constructor below.
 // So we'll use *only the bare minimum* memory for 5 elements.
@@ -63,7 +63,7 @@ assert!(example.try_insert(4, "borrow checker").is_ok());
 assert!(example
     .iter()
     .map(|(_, v)| *v)
-    .collect::<ArrayVec<[&str; CAPACITY]>>()
+    .collect::<ArrayVec<&str, CAPACITY>>()
     .iter()
     .eq(["Please","don't blame","the","borrow checker"].iter()));
 
@@ -78,10 +78,9 @@ assert_eq!(please_tuple, (1, "Please"));
 example.retain(|_, v| !v.contains("a"));
 
 // Extension
-let iterable = array_vec![
-    [(isize, &str); CAPACITY] =>
+let iterable = ArrayVec::from([
     (1337, "safety!"), (0, "Leverage"), (100, "for")
-];
+]);
 example.extend(iterable.into_iter());
 
 // Value mutation
@@ -92,7 +91,7 @@ if let Some(three_val) = example.get_mut(&3) {
 // New message :)
 assert!(example
     .into_values()
-    .collect::<ArrayVec<[&str; CAPACITY]>>()
+    .collect::<ArrayVec<&str, CAPACITY>>()
     .iter()
     .eq(["Leverage","your friend the","borrow checker","for","safety!"].iter()));
 ```
@@ -141,7 +140,7 @@ For advanced configuration options, please see [the documentation here](https://
 
 This library has three dependencies, each of which have no dependencies of their own (e.g. exactly three total dependencies).
 
-* [`tinyvec`](https://crates.io/crates/tinyvec) - `#![no_std]`, `#![forbid(unsafe_code)]` alternative to `Vec`.
+* [`arrayvec`](https://crates.io/crates/arrayvec) - `#![no_std]`, `#![forbid(unsafe_code)]` alternative to `Vec`.
 * [`micromath`](https://crates.io/crates/micromath) - `#![no_std]`, `#![forbid(unsafe_code)]` floating point approximations.
 * [`smallnum`](https://crates.io/crates/smallnum) - `#![no_std]`, `#![forbid(unsafe_code)]` integer abstraction.
 
@@ -196,7 +195,7 @@ Licensed under the [MIT license](https://github.com/tnballo/scapegoat/blob/maste
 //#![feature(variant_count)]
 
 // Production
-#![forbid(unsafe_code)]
+#![warn(unsafe_code)]
 #![cfg_attr(not(any(test, fuzzing)), no_std)]
 #![cfg_attr(not(any(test, fuzzing)), deny(missing_docs))]
 #![doc(

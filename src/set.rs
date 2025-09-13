@@ -28,11 +28,11 @@ use crate::tree::{SgError, SgTree};
 /// The majority of API examples and descriptions are adapted or directly copied from the standard library's [`BTreeSet`](https://doc.rust-lang.org/std/collections/struct.BTreeSet.html).
 /// The goal is to offer embedded developers familiar, ergonomic APIs on resource constrained systems that otherwise don't get the luxury of dynamic collections.
 #[derive(Default, Clone, Hash, PartialEq, Eq, Ord, PartialOrd)]
-pub struct SgSet<T: Ord + Default, const N: usize> {
+pub struct SgSet<T: Ord, const N: usize> {
     pub(crate) bst: SgTree<T, (), N>,
 }
 
-impl<T: Ord + Default, const N: usize> SgSet<T, N> {
+impl<T: Ord, const N: usize> SgSet<T, N> {
     /// Makes a new, empty `SgSet`.
     ///
     /// # Examples
@@ -107,7 +107,7 @@ impl<T: Ord + Default, const N: usize> SgSet<T, N> {
     ///
     /// assert!(set.capacity() == 10)
     /// ```
-    pub fn capacity(&self) -> usize {
+    pub const fn capacity(&self) -> usize {
         self.bst.capacity()
     }
 
@@ -940,7 +940,7 @@ impl<T: Ord + Default, const N: usize> SgSet<T, N> {
 // Debug
 impl<T, const N: usize> Debug for SgSet<T, N>
 where
-    T: Ord + Default + Debug,
+    T: Ord + Debug,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_set()
@@ -952,7 +952,7 @@ where
 // From array.
 impl<T, const N: usize> From<[T; N]> for SgSet<T, N>
 where
-    T: Ord + Default,
+    T: Ord,
 {
     /// ```
     /// use scapegoat::SgSet;
@@ -978,7 +978,7 @@ where
 // Construct from iterator.
 impl<T, const N: usize> FromIterator<T> for SgSet<T, N>
 where
-    T: Ord + Default,
+    T: Ord,
 {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
         let mut sgs = SgSet::new();
@@ -990,7 +990,7 @@ where
 // Extension from iterator.
 impl<T, const N: usize> Extend<T> for SgSet<T, N>
 where
-    T: Ord + Default,
+    T: Ord,
 {
     fn extend<TreeIter: IntoIterator<Item = T>>(&mut self, iter: TreeIter) {
         self.bst.extend(iter.into_iter().map(|e| (e, ())));
@@ -1000,7 +1000,7 @@ where
 // Extension from reference iterator.
 impl<'a, T, const N: usize> Extend<&'a T> for SgSet<T, N>
 where
-    T: 'a + Ord + Default + Copy,
+    T: 'a + Ord + Copy,
 {
     fn extend<I: IntoIterator<Item = &'a T>>(&mut self, iter: I) {
         self.extend(iter.into_iter().cloned());
@@ -1010,7 +1010,7 @@ where
 // General Iterators ---------------------------------------------------------------------------------------------------
 
 // Reference iterator
-impl<'a, T: Ord + Default, const N: usize> IntoIterator for &'a SgSet<T, N> {
+impl<'a, T: Ord, const N: usize> IntoIterator for &'a SgSet<T, N> {
     type Item = &'a T;
     type IntoIter = Iter<'a, T, N>;
 
@@ -1020,7 +1020,7 @@ impl<'a, T: Ord + Default, const N: usize> IntoIterator for &'a SgSet<T, N> {
 }
 
 // Consuming iterator
-impl<T: Ord + Default, const N: usize> IntoIterator for SgSet<T, N> {
+impl<T: Ord, const N: usize> IntoIterator for SgSet<T, N> {
     type Item = T;
     type IntoIter = IntoIter<T, N>;
 
@@ -1031,7 +1031,7 @@ impl<T: Ord + Default, const N: usize> IntoIterator for SgSet<T, N> {
 
 // Operator Overloading ------------------------------------------------------------------------------------------------
 
-impl<T: Ord + Default + Clone, const N: usize> Sub<&SgSet<T, N>> for &SgSet<T, N> {
+impl<T: Ord + Clone, const N: usize> Sub<&SgSet<T, N>> for &SgSet<T, N> {
     type Output = SgSet<T, N>;
 
     /// Returns the difference of `self` and `rhs` as a new `SgSet<T, N>`.
@@ -1053,7 +1053,7 @@ impl<T: Ord + Default + Clone, const N: usize> Sub<&SgSet<T, N>> for &SgSet<T, N
     }
 }
 
-impl<T: Ord + Default + Clone, const N: usize> BitAnd<&SgSet<T, N>> for &SgSet<T, N> {
+impl<T: Ord + Clone, const N: usize> BitAnd<&SgSet<T, N>> for &SgSet<T, N> {
     type Output = SgSet<T, N>;
 
     /// Returns the intersection of `self` and `rhs` as a new `SgSet<T, N>`.
@@ -1075,7 +1075,7 @@ impl<T: Ord + Default + Clone, const N: usize> BitAnd<&SgSet<T, N>> for &SgSet<T
     }
 }
 
-impl<T: Ord + Default + Clone, const N: usize> BitOr<&SgSet<T, N>> for &SgSet<T, N> {
+impl<T: Ord + Clone, const N: usize> BitOr<&SgSet<T, N>> for &SgSet<T, N> {
     type Output = SgSet<T, N>;
 
     /// Returns the union of `self` and `rhs` as a new `SgSet<T, N>`.
@@ -1097,7 +1097,7 @@ impl<T: Ord + Default + Clone, const N: usize> BitOr<&SgSet<T, N>> for &SgSet<T,
     }
 }
 
-impl<T: Ord + Default + Clone, const N: usize> BitXor<&SgSet<T, N>> for &SgSet<T, N> {
+impl<T: Ord + Clone, const N: usize> BitXor<&SgSet<T, N>> for &SgSet<T, N> {
     type Output = SgSet<T, N>;
 
     /// Returns the symmetric difference of `self` and `rhs` as a new `SgSet<T, N>`.

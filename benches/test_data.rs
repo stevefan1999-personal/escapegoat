@@ -14,12 +14,12 @@ pub struct RandTestData {
 
 impl RandTestData {
     pub fn new(size: usize) -> Self {
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
 
         RandTestData {
-            keys: (0..size).map(|_| rng.gen()).collect(),
-            get_idxs: (0..size).map(|_| rng.gen_range(0, size)).collect(),
-            remove_idxs: (0..size).map(|_| rng.gen_range(0, size)).collect(),
+            keys: (0..size).map(|_| rng.random_range(0..usize::MAX)).collect(),
+            get_idxs: (0..size).map(|_| rng.random_range(0..size)).collect(),
+            remove_idxs: (0..size).map(|_| rng.random_range(0..size)).collect(),
         }
     }
 }

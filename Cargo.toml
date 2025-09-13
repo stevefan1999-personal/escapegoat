@@ -22,13 +22,13 @@ include = [
 ]
 
 [dependencies]
-tinyvec = { version = "^1.5", features = ["rustc_1_55"] } # Has no dependencies of it's own
-micromath = "^2.0" # Has no dependenceis of it's own
+micromath = "^2.1" # Has no dependenceis of it's own
 smallnum = "^0.4"  # Has no dependencies of it's own
+arrayvec = { version = "0.7.6", default-features = false }
 
 [dev-dependencies]
-criterion = "0.3"
-rand = { version = "0.7", features = ["small_rng"] }
+criterion = "0.7"
+rand = { version = "0.9", features = ["small_rng"] }
 lazy_static = "1"
 
 [features]

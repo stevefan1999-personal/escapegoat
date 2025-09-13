@@ -57,7 +57,7 @@ enum SetMethod<T: Ord + Debug> {
 
 // Harness Helpers -----------------------------------------------------------------------------------------------------
 
-fn checked_get_len<T: Ord + Default, const N: usize>(
+fn checked_get_len<T: Ord , const N: usize>(
     sg_set: &SgSet<T, N>,
     bt_set: &BTreeSet<T>,
 ) -> usize {
@@ -67,7 +67,7 @@ fn checked_get_len<T: Ord + Default, const N: usize>(
     len
 }
 
-fn assert_len_unchanged<T: Ord + Default, const N: usize>(
+fn assert_len_unchanged<T: Ord , const N: usize>(
     sg_set: &SgSet<T, N>,
     bt_set: &BTreeSet<T>,
     old_len: usize,
@@ -76,7 +76,7 @@ fn assert_len_unchanged<T: Ord + Default, const N: usize>(
 }
 
 // TODO: is this an ideal way to generate a valid range?
-fn gen_valid_range<K: Ord + Default + Debug + Int, const N: usize>(
+fn gen_valid_range<K: Ord  + Debug + Int, const N: usize>(
     sg_set: &SgSet<K, N>,
     bt_set: &BTreeSet<K>,
     bitstream: &[u8],

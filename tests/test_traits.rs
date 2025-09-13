@@ -1,7 +1,7 @@
 use scapegoat::{SgMap, SgSet};
 
 fn is_auto_trait_friendly<T: Sized + Send + Sync + Unpin>() {}
-fn is_default<T: Default>() {}
+fn is_default<T>() {}
 
 #[test]
 fn test_auto_traits_map() {

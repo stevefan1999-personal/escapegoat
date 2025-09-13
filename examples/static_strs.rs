@@ -1,5 +1,5 @@
+use arrayvec::ArrayVec;
 use scapegoat::SgMap;
-use tinyvec::{array_vec, ArrayVec};
 
 // This const is an argument to each generic constructor below.
 // So we'll use *only the bare minimum* memory for 5 elements.
@@ -24,7 +24,7 @@ fn main() {
     assert!(example
         .iter()
         .map(|(_, v)| *v)
-        .collect::<ArrayVec<[&str; CAPACITY]>>()
+        .collect::<ArrayVec<&str, CAPACITY>>()
         .iter()
         .eq(["Please", "don't blame", "the", "borrow checker"].iter()));
 
@@ -39,10 +39,7 @@ fn main() {
     example.retain(|_, v| !v.contains("a"));
 
     // Extension
-    let iterable = array_vec![
-        [(isize, &str); CAPACITY] =>
-        (1337, "safety!"), (0, "Leverage"), (100, "for")
-    ];
+    let iterable = ArrayVec::from([(1337, "safety!"), (0, "Leverage"), (100, "for")]);
     example.extend(iterable.into_iter());
 
     // Value mutation
@@ -53,7 +50,7 @@ fn main() {
     // New message :)
     assert!(example
         .into_values()
-        .collect::<ArrayVec<[&str; CAPACITY]>>()
+        .collect::<ArrayVec<&str, CAPACITY>>()
         .iter()
         .eq([
             "Leverage",

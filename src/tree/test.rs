@@ -6,9 +6,9 @@ use super::node_dispatch::SmallNode;
 use super::tree::{Idx, SgTree};
 use super::SgError;
 
+use arrayvec::ArrayVec;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
-use tinyvec::array_vec;
 
 const CAPACITY: usize = 1024;
 
@@ -40,7 +40,7 @@ pub fn get_test_tree_and_keys() -> (SgTree<usize, &'static str, CAPACITY>, Vec<u
 // 1. A right child node's key is always greater than it's parent's key.
 // 2. A left child node's key is always less than it's parent's key.
 // 3. Every node has at most 1 parent.
-fn assert_logical_invariants<K: Ord + Default, V: Default, const N: usize>(sgt: &SgTree<K, V, N>) {
+fn assert_logical_invariants<K: Ord, V, const N: usize>(sgt: &SgTree<K, V, N>) {
     if let Some(root_idx) = sgt.opt_root_idx {
         let mut child_idxs = vec![root_idx]; // Count as "child" to make sure there's no other ref to this index
         let mut subtree_worklist = vec![&sgt.arena[root_idx]];
@@ -84,15 +84,15 @@ fn logical_fuzz<const N: usize>(
     check_invars: bool,
 ) {
     let mut shadow_keys = BTreeSet::<usize>::new();
-    let mut fast_rng = SmallRng::from_entropy();
-    let mut slow_rng = rand::thread_rng();
+    let mut fast_rng = SmallRng::from_os_rng();
+    let mut slow_rng = rand::rng();
 
     for i in 0..iter_cnt {
         let rand_key: usize;
         if check_invars {
-            rand_key = slow_rng.gen();
+            rand_key = slow_rng.random_range(0..usize::MAX);
         } else {
-            rand_key = fast_rng.gen();
+            rand_key = fast_rng.random_range(0..usize::MAX);
         }
 
         // Rand value insert
@@ -160,8 +160,8 @@ fn logical_fuzz<const N: usize>(
 #[allow(dead_code)]
 fn id_perm_fill<K, V, const N: usize>(sgt: &mut SgTree<K, V, N>)
 where
-    K: From<usize> + Eq + Debug + Ord + Default,
-    V: From<usize> + Eq + Debug + Default,
+    K: From<usize> + Eq + Debug + Ord,
+    V: From<usize> + Eq + Debug,
 {
     sgt.clear();
     for i in 0..sgt.capacity() {
@@ -345,14 +345,16 @@ fn test_flatten() {
     let root_idx = sgt.opt_root_idx.unwrap();
     let sorted_idxs = sgt.flatten_subtree_to_sorted_idxs::<u16>(root_idx);
 
-    assert_eq!(sorted_idxs, array_vec![[u16; CAPACITY] => 1, 0, 2]);
+    let expected: ArrayVec<u16, CAPACITY> = ArrayVec::from_iter([1, 0, 2]);
+    assert_eq!(sorted_idxs.as_slice(), expected.as_slice());
 
     sgt.remove(&2);
 
     let root_idx = sgt.opt_root_idx.unwrap();
     let sorted_idxs = sgt.flatten_subtree_to_sorted_idxs::<u16>(root_idx);
 
-    assert_eq!(sorted_idxs, array_vec![[u16; CAPACITY] => 1, 2]);
+    let expected: ArrayVec<u16, CAPACITY> = ArrayVec::from_iter([1, 2]);
+    assert_eq!(sorted_idxs.as_slice(), expected.as_slice());
 }
 
 #[test]
@@ -423,12 +425,12 @@ fn test_two_child_removal_case_3() {
 #[test]
 fn test_rand_remove() {
     let (mut sgt, mut keys) = get_test_tree_and_keys();
-    let mut rng = SmallRng::from_entropy();
+    let mut rng = SmallRng::from_os_rng();
 
     // Remove half of keys at random
     let mut keys_to_remove = Vec::new();
     for _ in 0..=(keys.len() / 2) {
-        keys_to_remove.push(keys.remove(rng.gen_range(0, keys.len())));
+        keys_to_remove.push(keys.remove(rng.random_range(0..keys.len())));
     }
     for k in &keys_to_remove {
         assert!(sgt.contains_key(k));
@@ -577,7 +579,7 @@ fn test_extend() {
         sgt_1.insert(i, i);
     }
 
-    let iterable_1 = array_vec![[(usize, usize); 5] => (0, 0), (1, 1), (2, 2), (3, 3), (4, 4)];
+    let iterable_1 = ArrayVec::from([(0, 0), (1, 1), (2, 2), (3, 3), (4, 4)]);
 
     assert!(sgt_1.clone().into_iter().eq(iterable_1.into_iter()));
 
@@ -585,11 +587,11 @@ fn test_extend() {
         sgt_2.insert(i, i);
     }
 
-    let iterable_2 = array_vec![[(usize, usize); 5] => (5, 5), (6, 6), (7, 7), (8, 8), (9, 9)];
+    let iterable_2 = ArrayVec::from([(5, 5), (6, 6), (7, 7), (8, 8), (9, 9)]);
 
     assert!(sgt_2.clone().into_iter().eq(iterable_2.into_iter()));
 
-    let iterable_3 = array_vec![[(usize, usize); 10] =>
+    let iterable_3 = ArrayVec::from([
         (0, 0),
         (1, 1),
         (2, 2),
@@ -599,8 +601,8 @@ fn test_extend() {
         (6, 6),
         (7, 7),
         (8, 8),
-        (9, 9)
-    ];
+        (9, 9),
+    ]);
 
     sgt_1.extend(sgt_2.iter());
     assert_eq!(sgt_2.len(), 5);

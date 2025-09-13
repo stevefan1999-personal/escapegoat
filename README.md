@@ -49,7 +49,7 @@ Other features:
 
 ```rust
 use scapegoat::SgMap;
-use tinyvec::{array_vec, ArrayVec};
+use arrayvec::{array_vec, ArrayVec};
 
 // This const is an argument to each generic constructor below.
 // So we'll use *only the bare minimum* memory for 5 elements.
@@ -150,7 +150,7 @@ For advanced configuration options, please see [the documentation here](https://
 
 This library has three dependencies, each of which have no dependencies of their own (e.g. exactly three total dependencies).
 
-* [`tinyvec`](https://crates.io/crates/tinyvec) - `#![no_std]`, `#![forbid(unsafe_code)]` alternative to `Vec`.
+* [`arrayvec`](https://crates.io/crates/arrayvec) - `#![no_std]`, `#![forbid(unsafe_code)]` alternative to `Vec`.
 * [`micromath`](https://crates.io/crates/micromath) - `#![no_std]`, `#![forbid(unsafe_code)]` floating point approximations.
 * [`smallnum`](https://crates.io/crates/smallnum) - `#![no_std]`, `#![forbid(unsafe_code)]` integer abstraction.
 

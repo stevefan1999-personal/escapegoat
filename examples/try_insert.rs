@@ -3,8 +3,8 @@ use scapegoat::{SgError, SgMap};
 // Identity permutation fill: (0, 0), (1, 1), (2, 2), ... , (n, n)
 fn id_perm_fill<K, V, const N: usize>(sgm: &mut SgMap<K, V, N>)
 where
-    K: From<usize> + Ord + Default,
-    V: From<usize> + Default,
+    K: From<usize> + Ord,
+    V: From<usize>,
 {
     sgm.clear();
     for i in 0..sgm.capacity() {

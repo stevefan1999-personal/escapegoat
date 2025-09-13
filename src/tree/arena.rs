@@ -4,8 +4,8 @@ use core::slice::{Iter, IterMut};
 use super::node::{Node, NodeGetHelper, NodeSwapHistHelper};
 use super::node_dispatch::SmallNode;
 
+use arrayvec::ArrayVec;
 use smallnum::SmallUnsigned;
-use tinyvec::ArrayVec;
 
 /*
 Note:
@@ -17,33 +17,29 @@ If caller obeys contract, `U` will be smallest unsigned capable of representing 
 
 /// An arena allocator, meta programmable for low memory footprint.
 #[derive(Clone, Debug)]
-pub struct Arena<K: Default, V: Default, U: Default, const N: usize> {
-    vec: ArrayVec<[Option<Node<K, V, U>>; N]>,
+pub struct Arena<K, V, U, const N: usize> {
+    vec: ArrayVec<Option<Node<K, V, U>>, N>,
 
     #[cfg(not(feature = "low_mem_insert"))]
-    free_list: ArrayVec<[U; N]>,
+    free_list: ArrayVec<U, N>,
 }
 
-impl<
-        K: Default,
-        V: Default,
-        U: Default + Copy + SmallUnsigned + Ord + PartialEq + PartialOrd,
-        const N: usize,
-    > Arena<K, V, U, N>
+impl<K, V, U: Copy + SmallUnsigned + Ord + PartialEq + PartialOrd, const N: usize>
+    Arena<K, V, U, N>
 {
     // TODO: is this function necessary?
     /// Const associated constructor for index scratch vector.
-    pub fn new_idx_vec() -> ArrayVec<[U; N]> {
-        ArrayVec::<[U; N]>::default()
+    pub fn new_idx_vec() -> ArrayVec<U, N> {
+        ArrayVec::<U, N>::new()
     }
 
     /// Constructor.
     pub fn new() -> Self {
         let a = Arena {
-            vec: ArrayVec::<[Option<Node<K, V, U>>; N]>::new(),
+            vec: ArrayVec::<Option<Node<K, V, U>>, N>::new(),
 
             #[cfg(not(feature = "low_mem_insert"))]
-            free_list: ArrayVec::<[U; N]>::new(),
+            free_list: ArrayVec::<U, N>::new(),
         };
 
         #[cfg(not(feature = "low_mem_insert"))]
@@ -67,7 +63,7 @@ impl<
     }
 
     /// Total capacity, e.g. maximum number of items.
-    pub fn capacity(&self) -> usize {
+    pub const fn capacity(&self) -> usize {
         N
     }
 
@@ -139,7 +135,7 @@ impl<
     pub fn sort(
         &mut self,
         root_idx: usize,
-        sort_metadata: ArrayVec<[NodeGetHelper<usize>; N]>, // `usize` here avoids `U` in tree iter signatures
+        sort_metadata: ArrayVec<NodeGetHelper<usize>, N>, // `usize` here avoids `U` in tree iter signatures
     ) -> usize {
         debug_assert!(sort_metadata.iter().all(|ngh| ngh.node_idx().is_some()));
 
@@ -195,7 +191,7 @@ impl<
     }
 
     /// Get the size of an individual arena node, in bytes.
-    pub fn node_size(&self) -> usize {
+    pub const fn node_size(&self) -> usize {
         core::mem::size_of::<Node<K, V, U>>()
     }
 }
@@ -204,7 +200,7 @@ impl<
 
 /// Immutable indexing.
 /// Indexed location MUST be occupied.
-impl<K: Default, V: Default, U: Default, const N: usize> Index<usize> for Arena<K, V, U, N> {
+impl<K, V, U, const N: usize> Index<usize> for Arena<K, V, U, N> {
     type Output = Node<K, V, U>;
 
     fn index(&self, index: usize) -> &Self::Output {
@@ -217,7 +213,7 @@ impl<K: Default, V: Default, U: Default, const N: usize> Index<usize> for Arena<
 
 /// Mutable indexing
 /// Indexed location MUST be occupied.
-impl<K: Default, V: Default, U: Default, const N: usize> IndexMut<usize> for Arena<K, V, U, N> {
+impl<K, V, U, const N: usize> IndexMut<usize> for Arena<K, V, U, N> {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         match self.vec.index_mut(index) {
             Some(node) => node,
@@ -226,12 +222,8 @@ impl<K: Default, V: Default, U: Default, const N: usize> IndexMut<usize> for Are
     }
 }
 
-impl<
-        K: Ord + Default,
-        V: Default,
-        U: Default + Copy + SmallUnsigned + Ord + PartialEq + PartialOrd,
-        const N: usize,
-    > Default for Arena<K, V, U, N>
+impl<K: Ord, V, U: Copy + SmallUnsigned + Ord + PartialEq + PartialOrd, const N: usize> Default
+    for Arena<K, V, U, N>
 {
     fn default() -> Self {
         Self::new()
@@ -243,11 +235,11 @@ NOTE: This is draft code for upgrades when `feature(generic_const_exprs)` stabil
 
 // Wrapper Iterators ---------------------------------------------------------------------------------------------------
 
-pub struct ArenaIter<'a, K: Default, V: Default, U, const N: usize> {
+pub struct ArenaIter<'a, K, V, U, const N: usize> {
     arena_iter: core::slice::Iter<'a, Option<Node<K, V, U>>>,
 }
 
-impl<'a, K: Default, V: Default, U, const N: usize> ArenaIter<'a, K, V, U, N> {
+impl<'a, K, V, U, const N: usize> ArenaIter<'a, K, V, U, N> {
     pub fn new(arena: &'a Arena<K, V, U, N>) -> Self {
         ArenaIter {
             arena_iter: arena.vec.iter(),
@@ -255,7 +247,7 @@ impl<'a, K: Default, V: Default, U, const N: usize> ArenaIter<'a, K, V, U, N> {
     }
 }
 
-impl<'a, K: Default, V: Default, U: SmallUnsigned + Copy, const N: usize> Iterator for ArenaIter<'a, K, V, U, N> {
+impl<'a, K, V, U: SmallUnsigned + Copy, const N: usize> Iterator for ArenaIter<'a, K, V, U, N> {
     type Item = (&'a K, &'a V);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -266,11 +258,11 @@ impl<'a, K: Default, V: Default, U: SmallUnsigned + Copy, const N: usize> Iterat
     }
 }
 
-pub struct ArenaIterMut<'a, K: Default, V: Default, U, const N: usize> {
+pub struct ArenaIterMut<'a, K, V, U, const N: usize> {
     arena_iter_mut: core::slice::IterMut<'a, Option<Node<K, V, U>>>,
 }
 
-impl<'a, K: Default, V: Default, U, const N: usize> ArenaIterMut<'a, K, V, U, N> {
+impl<'a, K, V, U, const N: usize> ArenaIterMut<'a, K, V, U, N> {
     pub fn new(arena: &'a mut Arena<K, V, U, N>) -> Self {
         ArenaIterMut {
             arena_iter_mut: arena.vec.iter_mut(),
@@ -278,7 +270,7 @@ impl<'a, K: Default, V: Default, U, const N: usize> ArenaIterMut<'a, K, V, U, N>
     }
 }
 
-impl<'a, K: Default, V: Default, U: SmallUnsigned + Copy, const N: usize> Iterator for ArenaIterMut<'a, K, V, U, N> {
+impl<'a, K, V, U: SmallUnsigned + Copy, const N: usize> Iterator for ArenaIterMut<'a, K, V, U, N> {
     type Item = (&'a K, &'a mut V);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -297,9 +289,10 @@ mod tests {
     use super::Arena;
     use crate::tree::node::NodeGetHelper;
     use crate::tree::node_dispatch::SmallNode;
+    use arrayvec::ArrayVec;
+    use core::iter::FromIterator;
     use core::mem::size_of_val;
     use smallnum::small_unsigned;
-    use tinyvec::array_vec;
 
     const CAPACITY: usize = 1024;
 
@@ -387,11 +380,11 @@ mod tests {
         assert_eq!(arena.vec[2].as_ref().unwrap().key(), &1);
 
         // Would be supplied for the above tree
-        let sort_metadata = array_vec! { [NodeGetHelper<usize>; CAPACITY] =>
+        let sort_metadata = ArrayVec::<_, CAPACITY>::from_iter([
             NodeGetHelper::new(Some(2), Some(1), false),
             NodeGetHelper::new(Some(1), None, false),
             NodeGetHelper::new(Some(0), Some(1), false),
-        };
+        ]);
 
         arena.sort(1, sort_metadata);
 

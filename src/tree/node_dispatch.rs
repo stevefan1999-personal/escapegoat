@@ -1,7 +1,7 @@
 // Size-optimized Node Trait -------------------------------------------------------------------------------------------
 
 /// Interface encapsulates `U`.
-pub trait SmallNode<K, V: Default> {
+pub trait SmallNode<K, V> {
     /// Get key.
     fn key(&self) -> &K;
 
