@@ -19,14 +19,14 @@ use super::node_dispatch::SmallNode;
 
 use arrayvec::ArrayVec;
 use const_panic::concat_panic;
-use fixed::types::U16F16;
+use fixed::types::U12F20;
 use smallnum::SmallUnsigned;
 
 // The `u16::MAX` limit is documented in our main `README.md`.
 pub type Idx = u16;
 
 // See: https://github.com/tnballo/scapegoat/blob/master/CONFIG.md
-const DEFAULT_ALPHA: U16F16 = U16F16::lit("0.6666666666666"); // 2/3 ≈ 0.666666
+const DEFAULT_ALPHA: U12F20 = U12F20::lit("0.6666666666666"); // 2/3 ≈ 0.666666
 
 /// A memory-efficient, self-balancing binary search tree.
 #[derive(Clone)]
@@ -41,7 +41,7 @@ pub struct SgTree<K, V, const N: usize> {
     curr_size: usize,
 
     // Balance control
-    alpha: U16F16,
+    alpha: U12F20,
     max_size: usize,
     rebal_cnt: usize,
 }
@@ -79,8 +79,8 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
     ///
     /// Returns `Err` if `0.5 <= alpha < 1.0` isn't `true` (invalid `a`, out of range).
     #[inline]
-    pub fn set_rebal_param(&mut self, alpha: U16F16) -> Result<(), SgError> {
-        match (U16F16::lit("0.5")..U16F16::lit("1.0")).contains(&alpha) {
+    pub fn set_rebal_param(&mut self, alpha: U12F20) -> Result<(), SgError> {
+        match (U12F20::lit("0.5")..U12F20::lit("1.0")).contains(&alpha) {
             true => {
                 self.alpha = alpha;
                 Ok(())
@@ -92,7 +92,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
     /// Get the current rebalance parameter, alpha.
     /// See [the corresponding setter method][SgTree::set_rebal_param] for more details.
     #[inline]
-    pub const fn rebal_param(&self) -> U16F16 {
+    pub const fn rebal_param(&self) -> U12F20 {
         self.alpha
     }
 
@@ -1150,8 +1150,8 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
         let mut parent_subtree_size = self.get_subtree_size::<U>(path[parent_path_idx].usize());
 
         while parent_path_idx > 0 {
-            let node_size_fp = U16F16::from_num(node_subtree_size);
-            let parent_size_fp = U16F16::from_num(parent_subtree_size);
+            let node_size_fp = U12F20::from_num(node_subtree_size);
+            let parent_size_fp = U12F20::from_num(parent_subtree_size);
 
             if (node_size_fp / parent_size_fp) > self.alpha {
                 break;
@@ -1404,8 +1404,8 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
         // Fixed-point implementation: find smallest k such that (1/α)^k <= val
         // This is equivalent to log_{1/α}(val) using iterative fixed-point arithmetic
         let mut result: usize = 0;
-        let mut current = U16F16::ONE;
-        let val_fp = U16F16::from_num(val);
+        let mut current = U12F20::ONE;
+        let val_fp = U12F20::from_num(val);
         let alpha_inv = self.alpha.recip();
 
         // Prevent infinite loops with reasonable upper bound

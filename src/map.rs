@@ -3,7 +3,7 @@ use core::fmt::{self, Debug};
 use core::iter::FromIterator;
 use core::ops::{Index, RangeBounds};
 
-use fixed::types::U16F16;
+use fixed::types::U12F20;
 
 use crate::map_types::{
     Entry, IntoIter, IntoKeys, IntoValues, Iter, IterMut, Keys, OccupiedEntry, OccupiedError,
@@ -65,17 +65,17 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     ///
     /// ```
     /// use scapegoat::SgMap;
-    /// use fixed::types::U16F16;
+    /// use fixed::types::U12F20;
     ///
     /// let mut map: SgMap<isize, isize, 10> = SgMap::new();
     ///
     /// // Set 2/3, e.g. `a = 0.666...` (it's default value).
-    /// let alpha = U16F16::from_num(2) / U16F16::from_num(3);
+    /// let alpha = U12F20::from_num(2) / U12F20::from_num(3);
     /// assert!(map.set_rebal_param(alpha).is_ok());
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub fn set_rebal_param(&mut self, alpha: U16F16) -> Result<(), SgError> {
+    pub fn set_rebal_param(&mut self, alpha: U12F20) -> Result<(), SgError> {
         self.bst.set_rebal_param(alpha)
     }
 
@@ -86,12 +86,12 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     ///
     /// ```
     /// use scapegoat::SgMap;
-    /// use fixed::types::U16F16;
+    /// use fixed::types::U12F20;
     ///
     /// let mut map: SgMap<isize, isize, 10> = SgMap::new();
     ///
     /// // Set 2/3, e.g. `a = 0.666...` (it's default value).
-    /// let alpha = U16F16::from_num(2) / U16F16::from_num(3);
+    /// let alpha = U12F20::from_num(2) / U12F20::from_num(3);
     /// assert!(map.set_rebal_param(alpha).is_ok());
     ///
     /// // Get the currently set value
@@ -99,7 +99,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub const fn rebal_param(&self) -> U16F16 {
+    pub const fn rebal_param(&self) -> U12F20 {
         self.bst.rebal_param()
     }
 

@@ -7,7 +7,7 @@ use super::node_dispatch::SmallNode;
 use super::tree::{Idx, SgTree};
 
 use arrayvec::ArrayVec;
-use fixed::types::U16F16;
+use fixed::types::U12F20;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
 
@@ -713,17 +713,17 @@ fn test_set_rebal_param() {
 
     // Lax rebalancing
     let mut sgt_2 = SgTree::<_, _, CAPACITY>::new();
-    assert!(sgt_2.set_rebal_param(U16F16::lit("0.9")).is_ok());
+    assert!(sgt_2.set_rebal_param(U12F20::lit("0.9")).is_ok());
     sgt_2.extend(data.clone().into_iter());
 
     // Strict rebalancing
     let mut sgt_3 = SgTree::<_, _, CAPACITY>::new();
-    assert!(sgt_3.set_rebal_param(U16F16::lit("0.5")).is_ok());
+    assert!(sgt_3.set_rebal_param(U12F20::lit("0.5")).is_ok());
     sgt_3.extend(data.into_iter());
 
     // Invalid rebalance factor
     assert_eq!(
-        sgt_3.set_rebal_param(U16F16::lit("0.3")),
+        sgt_3.set_rebal_param(U12F20::lit("0.3")),
         Err(SgError::RebalanceFactorOutOfRange)
     );
 

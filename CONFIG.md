@@ -24,7 +24,7 @@ We choose 2/3, e.g. `a = 0.666...`, by default.
 
 Note our default is almost exactly in the middle of the paper's range, suggesting it's a balanced choice (pun intended).
 
-`a` can be changed at runtime via the API `set_rebal_param(alpha_num: U16F16, alpha_denom: U16F16)`.
+`a` can be changed at runtime via the API `set_rebal_param(alpha_num: U12F20, alpha_denom: U12F20)`.
 The library's performance characteristics can be tuned on-the-fly, without recompiling.
 For example, manually setting the default 2/3 would be:
 
