@@ -165,7 +165,7 @@ fn test_set_intersection() {
     assert!(c.is_empty());
 
     let intersection: Vec<_> = c.intersection(&b).cloned().collect();
-    assert_eq!(intersection, []);
+    assert!(intersection.is_empty());
 }
 
 #[test]

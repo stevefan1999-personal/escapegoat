@@ -3,6 +3,8 @@ use core::fmt::{self, Debug};
 use core::iter::FromIterator;
 use core::ops::{Index, RangeBounds};
 
+use fixed::types::U16F16;
+
 use crate::map_types::{
     Entry, IntoIter, IntoKeys, IntoValues, Iter, IterMut, Keys, OccupiedEntry, OccupiedError,
     Range, RangeMut, VacantEntry, Values, ValuesMut,
@@ -57,43 +59,47 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// * As `a` approaches `1.0`, the tree will rebalance less often. This means quicker insertions, but slower lookups and deletions.
     ///     * If `a` reached `1.0`, it'd mean a tree that never rebalances.
     ///
-    /// Returns `Err` if `0.5 <= alpha_num / alpha_denom < 1.0` isn't `true` (invalid `a`, out of range).
+    /// Returns `Err` if `0.5 <= alpha < 1.0` isn't `true` (invalid `a`, out of range).
     ///
     /// # Examples
     ///
     /// ```
     /// use scapegoat::SgMap;
+    /// use fixed::types::U16F16;
     ///
     /// let mut map: SgMap<isize, isize, 10> = SgMap::new();
     ///
     /// // Set 2/3, e.g. `a = 0.666...` (it's default value).
-    /// assert!(map.set_rebal_param(2.0, 3.0).is_ok());
+    /// let alpha = U16F16::from_num(2) / U16F16::from_num(3);
+    /// assert!(map.set_rebal_param(alpha).is_ok());
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub fn set_rebal_param(&mut self, alpha_num: f32, alpha_denom: f32) -> Result<(), SgError> {
-        self.bst.set_rebal_param(alpha_num, alpha_denom)
+    pub fn set_rebal_param(&mut self, alpha: U16F16) -> Result<(), SgError> {
+        self.bst.set_rebal_param(alpha)
     }
 
-    /// Get the current rebalance parameter, alpha, as a tuple of `(alpha_numerator, alpha_denominator)`.
+    /// Get the current rebalance parameter, alpha.
     /// See [the corresponding setter method][SgMap::set_rebal_param] for more details.
     ///
     /// # Examples
     ///
     /// ```
     /// use scapegoat::SgMap;
+    /// use fixed::types::U16F16;
     ///
     /// let mut map: SgMap<isize, isize, 10> = SgMap::new();
     ///
     /// // Set 2/3, e.g. `a = 0.666...` (it's default value).
-    /// assert!(map.set_rebal_param(2.0, 3.0).is_ok());
+    /// let alpha = U16F16::from_num(2) / U16F16::from_num(3);
+    /// assert!(map.set_rebal_param(alpha).is_ok());
     ///
     /// // Get the currently set value
-    /// assert_eq!(map.rebal_param(), (2.0, 3.0));
+    /// assert_eq!(map.rebal_param(), alpha);
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub const fn rebal_param(&self) -> (f32, f32) {
+    pub const fn rebal_param(&self) -> U16F16 {
         self.bst.rebal_param()
     }
 

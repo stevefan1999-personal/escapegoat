@@ -151,7 +151,6 @@ For advanced configuration options, please see [the documentation here](https://
 This library has three dependencies, each of which have no dependencies of their own (e.g. exactly three total dependencies).
 
 * [`arrayvec`](https://crates.io/crates/arrayvec) - `#![no_std]`, `#![forbid(unsafe_code)]` alternative to `Vec`.
-* [`micromath`](https://crates.io/crates/micromath) - `#![no_std]`, `#![forbid(unsafe_code)]` floating point approximations.
 * [`smallnum`](https://crates.io/crates/smallnum) - `#![no_std]`, `#![forbid(unsafe_code)]` integer abstraction.
 
 Because this library and all dependencies are `#![forbid(unsafe_code)]`, no 3rd-party `unsafe` code is introduced into your project.

@@ -19,16 +19,14 @@ use super::node_dispatch::SmallNode;
 
 use arrayvec::ArrayVec;
 use const_panic::concat_panic;
-#[allow(unused_imports)] // micromath only used if `no_std`
-use micromath::F32Ext;
+use fixed::types::U16F16;
 use smallnum::SmallUnsigned;
 
 // The `u16::MAX` limit is documented in our main `README.md`.
 pub type Idx = u16;
 
 // See: https://github.com/tnballo/scapegoat/blob/master/CONFIG.md
-const DEFAULT_ALPHA_NUM: f32 = 2.0;
-const DEFAULT_ALPHA_DENOM: f32 = 3.0;
+const DEFAULT_ALPHA: U16F16 = U16F16::lit("0.6666666666666"); // 2/3 ≈ 0.666666
 
 /// A memory-efficient, self-balancing binary search tree.
 #[derive(Clone)]
@@ -43,8 +41,7 @@ pub struct SgTree<K, V, const N: usize> {
     curr_size: usize,
 
     // Balance control
-    alpha_num: f32,
-    alpha_denom: f32,
+    alpha: U16F16,
     max_size: usize,
     rebal_cnt: usize,
 }
@@ -64,8 +61,7 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
             max_idx: 0,
             min_idx: 0,
             curr_size: 0,
-            alpha_num: DEFAULT_ALPHA_NUM,
-            alpha_denom: DEFAULT_ALPHA_DENOM,
+            alpha: DEFAULT_ALPHA,
             max_size: 0,
             rebal_cnt: 0,
         }
@@ -81,23 +77,21 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
     /// * As `a` approaches `1.0`, the tree will rebalance less often. This means quicker insertions, but slower lookups and deletions.
     ///     * If `a` reached `1.0`, it'd mean a tree that never rebalances.
     ///
-    /// Returns `Err` if `0.5 <= alpha_num / alpha_denom < 1.0` isn't `true` (invalid `a`, out of range).
-    pub fn set_rebal_param(&mut self, alpha_num: f32, alpha_denom: f32) -> Result<(), SgError> {
-        let a = alpha_num / alpha_denom;
-        match (0.5..1.0).contains(&a) {
+    /// Returns `Err` if `0.5 <= alpha < 1.0` isn't `true` (invalid `a`, out of range).
+    pub fn set_rebal_param(&mut self, alpha: U16F16) -> Result<(), SgError> {
+        match (U16F16::lit("0.5")..U16F16::lit("1.0")).contains(&alpha) {
             true => {
-                self.alpha_num = alpha_num;
-                self.alpha_denom = alpha_denom;
+                self.alpha = alpha;
                 Ok(())
             }
             false => Err(SgError::RebalanceFactorOutOfRange),
         }
     }
 
-    /// Get the current rebalance parameter, alpha, as a tuple of `(alpha_numerator, alpha_denominator)`.
+    /// Get the current rebalance parameter, alpha.
     /// See [the corresponding setter method][SgTree::set_rebal_param] for more details.
-    pub const fn rebal_param(&self) -> (f32, f32) {
-        (self.alpha_num, self.alpha_denom)
+    pub const fn rebal_param(&self) -> U16F16 {
+        self.alpha
     }
 
     /// Total capacity, e.g. maximum number of tree pairs.
@@ -1114,10 +1108,14 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
         let mut parent_path_idx = path.len() - 1; // Parent of newly inserted
         let mut parent_subtree_size = self.get_subtree_size::<U>(path[parent_path_idx].usize());
 
-        while (parent_path_idx > 0)
-            && (self.alpha_denom * node_subtree_size as f32)
-                <= (self.alpha_num * parent_subtree_size as f32)
-        {
+        while parent_path_idx > 0 {
+            let node_size_fp = U16F16::from_num(node_subtree_size);
+            let parent_size_fp = U16F16::from_num(parent_subtree_size);
+
+            if (node_size_fp / parent_size_fp) > self.alpha {
+                break;
+            }
+
             node_subtree_size = parent_subtree_size;
             parent_path_idx -= 1;
             parent_subtree_size = self.get_subtree_size_differential::<U>(
@@ -1351,8 +1349,24 @@ impl<K: Ord, V, const N: usize> SgTree<K, V, N> {
 
     // Alpha weight balance computation helper.
     fn alpha_balance_depth(&self, val: usize) -> usize {
-        // log base (1/alpha), hence (denom/num)
-        (val as f32).log(self.alpha_denom / self.alpha_num).floor() as usize
+        if val <= 1 {
+            return 0;
+        }
+
+        // Fixed-point implementation: find smallest k such that (1/α)^k <= val
+        // This is equivalent to log_{1/α}(val) using iterative fixed-point arithmetic
+        let mut result: usize = 0;
+        let mut current = U16F16::ONE;
+        let val_fp = U16F16::from_num(val);
+        let alpha_inv = self.alpha.recip();
+
+        // Prevent infinite loops with reasonable upper bound
+        while current <= val_fp && result < 100 {
+            current = current * alpha_inv;
+            result += 1;
+        }
+
+        result.saturating_sub(1)
     }
 }
 
