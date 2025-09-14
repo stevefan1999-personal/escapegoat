@@ -20,4 +20,4 @@ pub use error::SgError;
 
 #[allow(clippy::module_inception)]
 mod tree;
-pub use tree::{Idx, SgTree};
+pub use tree::{Alpha, Idx, SgTree};

@@ -7,7 +7,6 @@ use super::node_dispatch::SmallNode;
 use super::tree::{Idx, SgTree};
 
 use arrayvec::ArrayVec;
-use fixed::types::U12F20;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
 
@@ -707,23 +706,25 @@ fn test_clone() {
 #[cfg(not(feature = "alt_impl"))] // This affects rebalance count and is experimental.
 #[test]
 fn test_set_rebal_param() {
+    use crate::tree::Alpha;
+
     assert!(CAPACITY >= 100);
     let data: Vec<(usize, usize)> = (0..100).map(|x| (x, x)).collect();
     let sgt_1 = SgTree::<_, _, CAPACITY>::from_iter(data.clone().into_iter());
 
     // Lax rebalancing
     let mut sgt_2 = SgTree::<_, _, CAPACITY>::new();
-    assert!(sgt_2.set_rebal_param(U12F20::lit("0.9")).is_ok());
+    assert!(sgt_2.set_rebal_param(Alpha::lit("0.9")).is_ok());
     sgt_2.extend(data.clone().into_iter());
 
     // Strict rebalancing
     let mut sgt_3 = SgTree::<_, _, CAPACITY>::new();
-    assert!(sgt_3.set_rebal_param(U12F20::lit("0.5")).is_ok());
+    assert!(sgt_3.set_rebal_param(Alpha::lit("0.5")).is_ok());
     sgt_3.extend(data.into_iter());
 
     // Invalid rebalance factor
     assert_eq!(
-        sgt_3.set_rebal_param(U12F20::lit("0.3")),
+        sgt_3.set_rebal_param(Alpha::lit("0.3")),
         Err(SgError::RebalanceFactorOutOfRange)
     );
 

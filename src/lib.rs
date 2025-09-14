@@ -4,7 +4,7 @@ Ordered set and map data structures via an arena-based [scapegoat tree](https://
 This is a forked version of [tnballo/scapegoat](https://github.com/tnballo/scapegoat) that does the following:
 
 * Embedded-friendly: `#![no_std]` by default.
-* Default requirement is removed due to the use of `arrayvec` instead of `tinyvec`, making it possible to create in const and static context 
+* Default requirement is removed due to the use of `arrayvec` instead of `tinyvec`, making it possible to create in const and static context
 * Adding more hints for the compiler that optimizes the code execution flow through the use of `branches` crate
 * Replacing floating point (whether soft or hard) into fixed point arithmetic, making it possible to run in bare-metal context where FPU is not available
 
@@ -40,7 +40,7 @@ Other features:
 
 ```rust
 use escapegoat::SgMap;
-use arrayvec::{array_vec, ArrayVec};
+use arrayvec::ArrayVec;
 
 // This const is an argument to each generic constructor below.
 // So we'll use *only the bare minimum* memory for 5 elements.
@@ -205,6 +205,7 @@ Licensed under the [MIT license](https://github.com/stevefan1999-personal/escape
 pub use crate::tree::{Arena, Node, NodeGetHelper, NodeRebuildHelper};
 
 mod tree;
+pub use crate::tree::Alpha;
 pub use crate::tree::SgError;
 
 mod map;

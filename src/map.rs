@@ -3,12 +3,11 @@ use core::fmt::{self, Debug};
 use core::iter::FromIterator;
 use core::ops::{Index, RangeBounds};
 
-use fixed::types::U12F20;
-
 use crate::map_types::{
     Entry, IntoIter, IntoKeys, IntoValues, Iter, IterMut, Keys, OccupiedEntry, OccupiedError,
     Range, RangeMut, VacantEntry, Values, ValuesMut,
 };
+use crate::tree::Alpha;
 use crate::tree::{Idx, SgError, SgTree, node::NodeGetHelper};
 
 /// Safe, fallible, embedded-friendly ordered map.
@@ -64,18 +63,17 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use escapegoat::SgMap;
-    /// use fixed::types::U12F20;
+    /// use escapegoat::{SgMap, Alpha};
     ///
     /// let mut map: SgMap<isize, isize, 10> = SgMap::new();
     ///
     /// // Set 2/3, e.g. `a = 0.666...` (it's default value).
-    /// let alpha = U12F20::from_num(2) / U12F20::from_num(3);
+    /// let alpha = Alpha::from_num(2) / Alpha::from_num(3);
     /// assert!(map.set_rebal_param(alpha).is_ok());
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub fn set_rebal_param(&mut self, alpha: U12F20) -> Result<(), SgError> {
+    pub fn set_rebal_param(&mut self, alpha: Alpha) -> Result<(), SgError> {
         self.bst.set_rebal_param(alpha)
     }
 
@@ -85,13 +83,12 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use escapegoat::SgMap;
-    /// use fixed::types::U12F20;
+    /// use escapegoat::{SgMap, Alpha};
     ///
     /// let mut map: SgMap<isize, isize, 10> = SgMap::new();
     ///
     /// // Set 2/3, e.g. `a = 0.666...` (it's default value).
-    /// let alpha = U12F20::from_num(2) / U12F20::from_num(3);
+    /// let alpha = Alpha::from_num(2) / Alpha::from_num(3);
     /// assert!(map.set_rebal_param(alpha).is_ok());
     ///
     /// // Get the currently set value
@@ -99,7 +96,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub const fn rebal_param(&self) -> U12F20 {
+    pub const fn rebal_param(&self) -> Alpha {
         self.bst.rebal_param()
     }
 

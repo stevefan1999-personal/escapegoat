@@ -4,12 +4,10 @@ use core::iter::FromIterator;
 use core::ops::RangeBounds;
 use core::ops::{BitAnd, BitOr, BitXor, Sub};
 
-use fixed::types::U12F20;
-
 use crate::set_types::{
     Difference, Intersection, IntoIter, Iter, Range, SymmetricDifference, Union,
 };
-use crate::tree::{SgError, SgTree};
+use crate::tree::{Alpha, SgError, SgTree};
 
 /// Safe, fallible, embedded-friendly ordered set.
 ///
@@ -63,18 +61,17 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use escapegoat::SgSet;
-    /// use fixed::types::U12F20;
+    /// use escapegoat::{SgSet, Alpha};
     ///
     /// let mut set: SgSet<isize, 10> = SgSet::new();
     ///
     /// // Set 2/3, e.g. `a = 0.666...` (it's default value).
-    /// let alpha = U12F20::from_num(2) / U12F20::from_num(3);
+    /// let alpha = Alpha::from_num(2) / Alpha::from_num(3);
     /// assert!(set.set_rebal_param(alpha).is_ok());
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub fn set_rebal_param(&mut self, alpha: U12F20) -> Result<(), SgError> {
+    pub fn set_rebal_param(&mut self, alpha: Alpha) -> Result<(), SgError> {
         self.bst.set_rebal_param(alpha)
     }
 
@@ -84,13 +81,12 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use escapegoat::SgSet;
-    /// use fixed::types::U12F20;
+    /// use escapegoat::{SgSet, Alpha};
     ///
     /// let mut set: SgSet<isize, 10> = SgSet::new();
     ///
     /// // Set 2/3, e.g. `a = 0.666...` (it's default value).
-    /// let alpha = U12F20::from_num(2) / U12F20::from_num(3);
+    /// let alpha = Alpha::from_num(2) / Alpha::from_num(3);
     /// assert!(set.set_rebal_param(alpha).is_ok());
     ///
     /// // Get the currently set value
@@ -98,7 +94,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// ```
     #[doc(alias = "rebalance")]
     #[doc(alias = "alpha")]
-    pub const fn rebal_param(&self) -> U12F20 {
+    pub const fn rebal_param(&self) -> Alpha {
         self.bst.rebal_param()
     }
 

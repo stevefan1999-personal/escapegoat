@@ -1,8 +1,8 @@
 use std::collections::BTreeSet;
 use std::iter::FromIterator;
 
-use rand::Rng;
 use escapegoat::SgSet;
+use rand::Rng;
 
 // Random Test Data ----------------------------------------------------------------------------------------------------
 
