@@ -1,6 +1,6 @@
 
 [package]
-name = "scapegoat-fuzz"
+name = "escapegoat-fuzz"
 version = "0.0.0"
 authors = ["Automatically generated"]
 publish = false
@@ -14,7 +14,7 @@ libfuzzer-sys = { version = "0.4", features = ["arbitrary-derive"] }
 arbitrary = { version = "1", features = ["derive"] }
 smallnum = "^0.4"
 
-[dependencies.scapegoat]
+[dependencies.escapegoat]
 path = ".."
 
 # Prevent this from interfering with workspaces

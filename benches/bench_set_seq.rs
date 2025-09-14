@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 use std::iter::FromIterator;
 
 use criterion::{Criterion, criterion_group, criterion_main};
-use scapegoat::SgSet;
+use escapegoat::SgSet;
 
 mod test_data;
 use test_data::{

@@ -39,7 +39,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     ///
@@ -64,7 +64,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     /// use fixed::types::U12F20;
     ///
     /// let mut map: SgMap<isize, isize, 10> = SgMap::new();
@@ -85,7 +85,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     /// use fixed::types::U12F20;
     ///
     /// let mut map: SgMap<isize, isize, 10> = SgMap::new();
@@ -108,7 +108,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<usize, &str, 10>::new();
     ///
@@ -123,7 +123,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// a.insert(2, "b");
@@ -143,7 +143,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// a.insert(2, "b");
@@ -163,7 +163,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// a.insert(1, "hello");
@@ -183,7 +183,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// a.insert(1, "hello");
@@ -203,7 +203,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// a.insert(1, String::from("hello"));
@@ -228,7 +228,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// a.insert(1, "a");
@@ -261,7 +261,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     ///
     /// ```
     /// use core::iter::FromIterator;
-    /// use scapegoat::{SgMap, SgError};
+    /// use escapegoat::{SgMap, SgError};
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// a.try_insert(1, "a").is_ok();
@@ -318,7 +318,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// assert_eq!(map.insert(37, "a"), None);
@@ -349,7 +349,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::{SgMap, SgError};
+    /// use escapegoat::{SgMap, SgError};
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     ///
@@ -402,7 +402,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// Basic usage:
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// assert_eq!(map.try_insert_std(37, "a").unwrap(), &"a");
@@ -428,7 +428,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     ///
     /// ```
     /// use core::iter::FromIterator;
-    /// use scapegoat::{SgMap, SgError};
+    /// use escapegoat::{SgMap, SgError};
     ///
     /// let mut a = SgMap::<_, _, 2>::new();
     /// let mut b = SgMap::<_, _, 3>::from_iter([(1, "a"), (2, "b"), (3, "c")]);
@@ -457,7 +457,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::{SgMap, SgError};
+    /// use escapegoat::{SgMap, SgError};
     ///
     /// const CAPACITY_1: usize = 1_000;
     /// let vec: Vec<(usize, usize)> = (0..CAPACITY_1).map(|n|(n, n)).collect();
@@ -488,7 +488,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(3, "c");
@@ -511,7 +511,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert("a", 1);
@@ -541,7 +541,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -564,7 +564,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map: SgMap<i32, i32, 10> = (0..8).map(|x| (x, x*10)).collect();
     /// // Keep only the elements with even-numbered keys.
@@ -585,7 +585,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// a.insert(1, "a");
@@ -625,7 +625,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -648,7 +648,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -671,7 +671,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -694,7 +694,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -716,7 +716,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// a.insert(1, "a");
@@ -734,7 +734,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -754,7 +754,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// assert!(a.is_empty());
@@ -770,7 +770,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 2>::new();
     /// a.insert(1, "a");
@@ -788,7 +788,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// assert_eq!(map.first_key_value(), None);
@@ -808,7 +808,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// assert_eq!(map.first_key_value(), None);
@@ -831,7 +831,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// Draining elements in ascending order, while keeping a usable map each iteration.
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -854,7 +854,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "b");
@@ -873,7 +873,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "b");
@@ -895,7 +895,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// Draining elements in descending order, while keeping a usable map each iteration.
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -917,7 +917,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut a = SgMap::<_, _, 10>::new();
     /// assert_eq!(a.len(), 0);
@@ -935,7 +935,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// Basic usage:
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut count = SgMap::<&str, usize, 10>::new();
     ///
@@ -963,7 +963,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -994,7 +994,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
     /// map.insert(1, "a");
@@ -1036,7 +1036,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// Basic usage:
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     /// use core::ops::Bound::Included;
     ///
     /// let mut map = SgMap::<_, _, 10>::new();
@@ -1078,7 +1078,7 @@ impl<K: Ord, V, const N: usize> SgMap<K, V, N> {
     /// Basic usage:
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map: SgMap<_, _, 10> = ["Alice", "Bob", "Carol", "Cheryl"]
     ///     .iter()
@@ -1124,7 +1124,7 @@ where
     K: Ord,
 {
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let map1 = SgMap::from([(1, 2), (3, 4)]);
     /// let map2: SgMap<_, _, 2> = [(1, 2), (3, 4)].into();

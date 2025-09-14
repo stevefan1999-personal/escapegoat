@@ -40,7 +40,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set: SgSet<i32, 10> = SgSet::new();
     /// ```
@@ -63,7 +63,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     /// use fixed::types::U12F20;
     ///
     /// let mut set: SgSet<isize, 10> = SgSet::new();
@@ -84,7 +84,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     /// use fixed::types::U12F20;
     ///
     /// let mut set: SgSet<isize, 10> = SgSet::new();
@@ -107,7 +107,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set: SgSet<i32, 10> = SgSet::new();
     ///
@@ -122,7 +122,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut a = SgSet::<_, 10>::new();
     /// a.insert(1);
@@ -158,7 +158,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     ///
     /// ```
     /// use core::iter::FromIterator;
-    /// use scapegoat::{SgSet, SgError};
+    /// use escapegoat::{SgSet, SgError};
     ///
     /// let mut a = SgSet::<_, 10>::new();
     /// assert!(a.try_insert(1).is_ok());
@@ -214,7 +214,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set = SgSet::<_, 10>::new();
     ///
@@ -237,7 +237,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::{SgSet, SgError};
+    /// use escapegoat::{SgSet, SgError};
     ///
     /// let mut set = SgSet::<_, 10>::new();
     ///
@@ -280,7 +280,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     ///
     /// ```
     /// use core::iter::FromIterator;
-    /// use scapegoat::{SgSet, SgError};
+    /// use escapegoat::{SgSet, SgError};
     ///
     /// let mut a = SgSet::<_, 2>::new();
     /// let mut b = SgSet::<_, 3>::from_iter([1, 2, 3]);
@@ -315,7 +315,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::{SgSet, SgError};
+    /// use escapegoat::{SgSet, SgError};
     ///
     /// const CAPACITY_1: usize = 1_000;
     /// assert!(SgSet::<_, CAPACITY_1>::try_from_iter((0..CAPACITY_1)).is_ok());
@@ -344,7 +344,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let set: SgSet<usize, 3> = [1, 2, 3].iter().cloned().collect();
     /// let mut set_iter = set.iter();
@@ -357,7 +357,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// Values returned by the iterator are returned in ascending order:
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let set: SgSet<usize, 3> = [3, 1, 2].iter().cloned().collect();
     /// let mut set_iter = set.iter();
@@ -380,7 +380,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set = SgSet::<_, 10>::new();
     ///
@@ -402,7 +402,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut a = SgSet::<_, 5>::new();
     /// a.insert(1);
@@ -439,7 +439,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set = SgSet::<_, 10>::new();
     /// set.insert(Vec::<i32>::new());
@@ -478,7 +478,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set: SgSet<_, 10> = [1, 2, 3].iter().cloned().collect();
     /// assert_eq!(set.take(&2), Some(2));
@@ -500,7 +500,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let xs = [1, 2, 3, 4, 5, 6];
     /// let mut set: SgSet<i32, 10> = xs.iter().cloned().collect();
@@ -525,7 +525,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let set: SgSet<_, 10> = [1, 2, 3].iter().cloned().collect();
     /// assert_eq!(set.get(&2), Some(&2));
@@ -544,7 +544,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut v = SgSet::<_, 10>::new();
     /// v.insert(1);
@@ -564,7 +564,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let set: SgSet<_, 10> = [1, 2, 3].iter().cloned().collect();
     /// assert_eq!(set.contains(&1), true);
@@ -583,7 +583,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set = SgSet::<_, 2>::new();
     /// assert_eq!(set.first(), None);
@@ -605,7 +605,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set = SgSet::<_, 10>::new();
     ///
@@ -627,7 +627,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set = SgSet::<_, 10>::new();
     /// assert_eq!(set.first(), None);
@@ -649,7 +649,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut set = SgSet::<_, 10>::new();
     ///
@@ -671,7 +671,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut v = SgSet::<_, 10>::new();
     /// assert_eq!(v.len(), 0);
@@ -697,7 +697,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     /// use core::ops::Bound::Included;
     ///
     /// let mut set = SgSet::<_, 5>::new();
@@ -727,7 +727,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut a = SgSet::<_, 10>::new();
     /// a.insert(1);
@@ -752,7 +752,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut a = SgSet::<_, 10>::new();
     /// a.insert(1);
@@ -788,7 +788,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut a = SgSet::<_, 10>::new();
     /// a.insert(1);
@@ -813,7 +813,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut a = SgSet::<_, 10>::new();
     /// a.insert(1);
@@ -844,7 +844,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut v = SgSet::<_, 10>::new();
     /// assert!(v.is_empty());
@@ -860,7 +860,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let mut a = SgSet::<_, 2>::new();
     /// a.insert(1);
@@ -877,7 +877,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     /// let a: SgSet<_, 10> = [1, 2, 3].iter().cloned().collect();
     /// let mut b = SgSet::new();
     ///
@@ -899,7 +899,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let sup: SgSet<_, 10> = [1, 2, 3].iter().cloned().collect();
     /// let mut set = SgSet::new();
@@ -922,7 +922,7 @@ impl<T: Ord, const N: usize> SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let sub: SgSet<_, 3> = [1, 2].iter().cloned().collect();
     /// let mut set = SgSet::new();
@@ -964,7 +964,7 @@ where
     T: Ord,
 {
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let set1 = SgSet::from([1, 2, 3, 4]);
     /// let set2: SgSet<_, 4> = [1, 2, 3, 4].into();
@@ -1048,7 +1048,7 @@ impl<T: Ord + Clone, const N: usize> Sub<&SgSet<T, N>> for &SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let a: SgSet<_, 10> = vec![1, 2, 3].into_iter().collect();
     /// let b: SgSet<_, 10> = vec![3, 4, 5].into_iter().collect();
@@ -1070,7 +1070,7 @@ impl<T: Ord + Clone, const N: usize> BitAnd<&SgSet<T, N>> for &SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let a: SgSet<_, 10> = vec![1, 2, 3].into_iter().collect();
     /// let b: SgSet<_, 10> = vec![2, 3, 4].into_iter().collect();
@@ -1092,7 +1092,7 @@ impl<T: Ord + Clone, const N: usize> BitOr<&SgSet<T, N>> for &SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let a: SgSet<_, 10> = vec![1, 2, 3].into_iter().collect();
     /// let b: SgSet<_, 10> = vec![3, 4, 5].into_iter().collect();
@@ -1114,7 +1114,7 @@ impl<T: Ord + Clone, const N: usize> BitXor<&SgSet<T, N>> for &SgSet<T, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgSet;
+    /// use escapegoat::SgSet;
     ///
     /// let a: SgSet<_, 10> = vec![1, 2, 3].into_iter().collect();
     /// let b: SgSet<_, 10> = vec![2, 3, 4].into_iter().collect();

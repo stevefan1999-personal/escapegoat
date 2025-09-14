@@ -12,7 +12,7 @@ use libfuzzer_sys::{
     fuzz_target,
 };
 
-use scapegoat::SgSet;
+use escapegoat::SgSet;
 use std::collections::BTreeSet;
 
 const CAPACITY: usize = 2048;

@@ -9,7 +9,7 @@ use core::alloc::{GlobalAlloc, Layout};
 
 extern crate libc;
 
-use scapegoat::SgMap;
+use escapegoat::SgMap;
 
 #[no_mangle]
 pub fn main(_argc: i32, _argv: *const *const u8) -> isize {

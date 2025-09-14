@@ -1,9 +1,12 @@
 /*!
 Ordered set and map data structures via an arena-based [scapegoat tree](https://people.csail.mit.edu/rivest/pubs/GR93.pdf) (memory-efficient, self-balancing binary search tree).
 
+This is a forked version of [tnballo/scapegoat](https://github.com/tnballo/scapegoat) that does the following:
+
 * Embedded-friendly: `#![no_std]` by default.
-* Safe: `#![forbid(unsafe_code)]`, including all dependencies.
-* Validated via [differential fuzzing](https://tiemoko.com/blog/diff-fuzz/), against the standard library's `BTreeSet` and `BTreeMap`.
+* Default requirement is removed due to the use of `arrayvec` instead of `tinyvec`, making it possible to create in const and static context 
+* Adding more hints for the compiler that optimizes the code execution flow through the use of `branches` crate
+* Replacing floating point (whether soft or hard) into fixed point arithmetic, making it possible to run in bare-metal context where FPU is not available
 
 ### About
 
@@ -14,10 +17,7 @@ Two APIs:
 
 Strives for three properties:
 
-* **Maximal safety:** strong [memory safety](https://tiemoko.com/blog/blue-team-rust/) guarantees, hence `#![forbid(unsafe_code)]`.
-    * **Compile-time safety:** no `unsafe` (no raw pointer dereference, etc.).
-    * **Debug-time safety:** `debug_assert!` for logical invariants exercised in testing.
-    * **Runtime safety:** no interior mutability (e.g. no need for `Rc<RefCell<T>>`'s runtime check).
+* **Runtime safety:** no interior mutability (e.g. no need for `Rc<RefCell<T>>`'s runtime check).
 
 * **Minimal footprint:** low resource use, hence `#![no_std]`.
     * **Memory-efficient:** nodes have only child index metadata, node memory is re-used.
@@ -39,8 +39,8 @@ Other features:
 `SgMap` non-exhaustive, `#![no_std]` API example (would work almost identically for `std::collections::BTreeMap`):
 
 ```rust
-use scapegoat::SgMap;
-use arrayvec::ArrayVec;
+use escapegoat::SgMap;
+use arrayvec::{array_vec, ArrayVec};
 
 // This const is an argument to each generic constructor below.
 // So we'll use *only the bare minimum* memory for 5 elements.
@@ -96,7 +96,7 @@ assert!(example
     .eq(["Leverage","your friend the","borrow checker","for","safety!"].iter()));
 ```
 
-Additional [examples here](https://github.com/tnballo/scapegoat/blob/master/examples/README.md).
+Additional [examples here](https://github.com/stevefan1999-personal/escapegoat/blob/master/examples/README.md).
 
 ### Stack Capacity: Important Context
 
@@ -106,7 +106,7 @@ That usage is fixed:
 
 ```rust
 use core::mem::size_of_val;
-use scapegoat::SgMap;
+use escapegoat::SgMap;
 
 let small_map: SgMap<u64, u64, 100> = SgMap::new(); // 100 item capacity
 let big_map: SgMap<u64, u64, 2_048> = SgMap::new(); // 2,048 item capacity
@@ -134,17 +134,15 @@ Please note:
 > Regardless, you must test to ensure you don't exceed the stack size limit of your target platform.
 > Rust only supports stack probes on x86/x64, although [creative linking solutions](https://blog.japaric.io/stack-overflow-protection/) have been suggested for other architectures.
 
-For advanced configuration options, please see [the documentation here](https://github.com/tnballo/scapegoat/blob/master/CONFIG.md).
+For advanced configuration options, please see [the documentation here](https://github.com/stevefan1999-personal/escapegoat/blob/master/CONFIG.md).
 
 ### Trusted Dependencies
 
 This library has three dependencies, each of which have no dependencies of their own (e.g. exactly three total dependencies).
 
-* [`arrayvec`](https://crates.io/crates/arrayvec) - `#![no_std]`, `#![forbid(unsafe_code)]` alternative to `Vec`.
+* [`arrayvec`](https://crates.io/crates/arrayvec) - `#![no_std]`
 * [`smallnum`](https://crates.io/crates/smallnum) - `#![no_std]`, `#![forbid(unsafe_code)]` integer abstraction.
 
-Because this library and all dependencies are `#![forbid(unsafe_code)]`, no 3rd-party `unsafe` code is introduced into your project.
-This maximizes **static guarantees** for memory safety (enforced via Rust's type system).
 Robustness and correctness properties beyond memory safety are **validated dynamically**, via differential fuzzing.
 
 ### Additional Considerations
@@ -155,16 +153,16 @@ This project is an exercise in safe, portable data structure design.
 The goal is to offer embedded developers familiar, ergonomic APIs on resource constrained systems that otherwise don't get the luxury of dynamic collections.
 Without sacrificing safety.
 
-`scapegoat` is not as fast or mature as the [standard library's `BTreeMap`/`BTreeSet`](http://cglab.ca/~abeinges/blah/rust-btree-case/) (benchmarks via `cargo bench`).
+`escapegoat` is not as fast or mature as the [standard library's `BTreeMap`/`BTreeSet`](http://cglab.ca/~abeinges/blah/rust-btree-case/) (benchmarks via `cargo bench`).
 The standard library has been heavily optimized for cache performance.
 This library is optimized for low, stack-only memory footprint.
 It offers:
 
-* **Best-effort Compatibility:** APIs are mostly a subset of `BTreeMap`'s/`BTreeSet`'s, making it a mostly "drop-in" replacement for `#![no_std]` systems. Please [open an issue](https://github.com/tnballo/scapegoat/issues) if an API you need isn't yet supported.
+* **Best-effort Compatibility:** APIs are mostly a subset of `BTreeMap`'s/`BTreeSet`'s, making it a mostly "drop-in" replacement for `#![no_std]` systems. Please [open an issue](https://github.com/stevefan1999-personal/escapegoat/issues) if an API you need isn't yet supported.
 
-* **Dynamic Validation:** [Coverage-guided, structure-aware, differential fuzzing](https://github.com/tnballo/scapegoat/tree/master/fuzz) is used to demonstrate that this implementation is logically equivalent and equally reliable.
+* **Dynamic Validation:** [Coverage-guided, structure-aware, differential fuzzing](https://github.com/stevefan1999-personal/escapegoat/tree/master/fuzz) is used to demonstrate that this implementation is logically equivalent and equally reliable.
 
-* **Tunable Performance:** A [single floating point value](https://github.com/tnballo/scapegoat/blob/master/CONFIG.md#tuning-the-the-trees-a-factor) optimizes relative performance of `insert`, `get`, and `remove` operation classes. And it can be changed at runtime.
+* **Tunable Performance:** A [single floating point value](https://github.com/stevefan1999-personal/escapegoat/blob/master/CONFIG.md#tuning-the-the-trees-a-factor) optimizes relative performance of `insert`, `get`, and `remove` operation classes. And it can be changed at runtime.
 
 **Algorithmic Complexity**
 
@@ -180,14 +178,14 @@ Space complexity is always `O(n)`. Time complexity:
 
 **Memory Footprint Demos**
 
-* [Code size demo](https://github.com/tnballo/scapegoat/blob/master/misc/min_size/README.md) - `SgMap<usize, usize, 1024>` with `insert`, `get`, and `remove` called: **14.2KB** for an x86-64 binary. Caveat: you'll likely want to use more than 3 functions, resulting in more executable code getting included.
+* [Code size demo](https://github.com/stevefan1999-personal/escapegoat/blob/master/misc/min_size/README.md) - `SgMap<usize, usize, 1024>` with `insert`, `get`, and `remove` called: **14.2KB** for an x86-64 binary. Caveat: you'll likely want to use more than 3 functions, resulting in more executable code getting included.
 
-* [Stack space demo](https://github.com/tnballo/scapegoat/blob/master/examples/tiny_map.rs) - `SgMap<u8, u8, 128>`: **1.3KB** storage cost. Caveat: more stack space is required for runtime book keeping (e.g. rebalancing).
+* [Stack space demo](https://github.com/stevefan1999-personal/escapegoat/blob/master/examples/tiny_map.rs) - `SgMap<u8, u8, 128>`: **1.3KB** storage cost. Caveat: more stack space is required for runtime book keeping (e.g. rebalancing).
 
 ### License and Contributing
 
-Licensed under the [MIT license](https://github.com/tnballo/scapegoat/blob/master/LICENSE).
-[Contributions](https://github.com/tnballo/scapegoat/blob/master/CONTRIBUTING.md) are welcome!
+Licensed under the [MIT license](https://github.com/stevefan1999-personal/escapegoat/blob/master/LICENSE).
+[Contributions](https://github.com/stevefan1999-personal/escapegoat/blob/master/CONTRIBUTING.md) are welcome!
 */
 
 // Test temp
@@ -198,7 +196,7 @@ Licensed under the [MIT license](https://github.com/tnballo/scapegoat/blob/maste
 #![cfg_attr(not(any(test, fuzzing)), no_std)]
 #![cfg_attr(not(any(test, fuzzing)), deny(missing_docs))]
 #![doc(
-    html_logo_url = "https://raw.githubusercontent.com/tnballo/scapegoat/master/img/scapegoat.svg"
+    html_logo_url = "https://raw.githubusercontent.com/stevefan1999-personal/escapegoat/master/img/escapegoat.svg"
 )]
 #![deny(missing_docs)]
 

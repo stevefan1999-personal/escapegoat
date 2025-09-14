@@ -1,4 +1,4 @@
-use scapegoat::{SgMap, SgSet};
+use escapegoat::{SgMap, SgSet};
 
 fn is_auto_trait_friendly<T: Sized + Send + Sync + Unpin>() {}
 fn is_default<T>() {}

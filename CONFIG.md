@@ -1,6 +1,6 @@
 # Advanced Configuration
 
-This doc tackles advanced configuration options, it assumed you've read the main [README.md](https://github.com/tnballo/scapegoat/blob/master/README.md).
+This doc tackles advanced configuration options, it assumed you've read the main [README.md](https://github.com/stevefan1999-personal/escapegoat/blob/master/README.md).
 
 ## Runtime Configuration
 
@@ -29,7 +29,7 @@ The library's performance characteristics can be tuned on-the-fly, without recom
 For example, manually setting the default 2/3 would be:
 
 ```rust
-use scapegoat::SgMap;
+use escapegoat::SgMap;
 let mut map: SgMap<isize, isize, 10> = SgMap::new();
 assert!(map.set_rebal_param(2.0, 3.0).is_ok());
 ```
@@ -37,7 +37,7 @@ assert!(map.set_rebal_param(2.0, 3.0).is_ok());
 ## Features for Compile-time Configuration
 
 > **WARNING:** Please do *NOT* enable any of the below optional or experimental features if publishing your project on [crates.io](https://crates.io/).
-> Features are additive. Suppose an upstream project that uses your project as a dependency also uses another downstream dependency that uses this library (e.g. 2+ transitive dependencies on `scapegoat` in a single build).
+> Features are additive. Suppose an upstream project that uses your project as a dependency also uses another downstream dependency that uses this library (e.g. 2+ transitive dependencies on `escapegoat` in a single build).
 > If you enabled a feature: all code would compile, *but* would not have the runtime performance characteristic expected!
 
 ### The `low_mem_insert` feature (Optional)

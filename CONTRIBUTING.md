@@ -16,11 +16,11 @@ Please read through this document before submitting pull requests to ensure an e
 * ["Beyond the Borrow Checker: Differential Fuzzing"](https://tiemoko.com/blog/diff-fuzz/).
     * Blog post explaining how and why this project uses fuzz testing.
 
-Questions are welcome, feel free to [open an issue](https://github.com/tnballo/scapegoat/issues) or use the [discussion board](https://github.com/tnballo/scapegoat/discussions).
+Questions are welcome, feel free to [open an issue](https://github.com/stevefan1999-personal/escapegoat/issues) or use the [discussion board](https://github.com/stevefan1999-personal/escapegoat/discussions).
 
 ## Development Environment
 
-This project offers a [Dockerfile](https://github.com/tnballo/scapegoat/blob/master/Dockerfile) for your convenience, but it's use is entirely optional.
+This project offers a [Dockerfile](https://github.com/stevefan1999-personal/escapegoat/blob/master/Dockerfile) for your convenience, but it's use is entirely optional.
 
 ## Contributing via Pull Requests
 
@@ -46,10 +46,10 @@ GitHub provides additional document on [forking a repository](https://help.githu
 
 ## Finding Contributions to Work On
 
-Looking at [currently open issues](https://github.com/tnballo/scapegoat/issues) is a great way to find something to work on.
+Looking at [currently open issues](https://github.com/stevefan1999-personal/escapegoat/issues) is a great way to find something to work on.
 However, you're free to suggest your own features and ideas - we'd love to discuss them!
 
 ## Licensing
 
-See the [LICENSE](https://github.com/tnballo/scapegoat/blob/master/LICENSE) file for this project's licensing.
+See the [LICENSE](https://github.com/stevefan1999-personal/escapegoat/blob/master/LICENSE) file for this project's licensing.
 All contributions to this project will, by default, use this license.

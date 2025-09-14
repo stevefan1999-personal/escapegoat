@@ -1,4 +1,4 @@
-use scapegoat::{SgError, SgMap};
+use escapegoat::{SgError, SgMap};
 
 // Identity permutation fill: (0, 0), (1, 1), (2, 2), ... , (n, n)
 fn id_perm_fill<K, V, const N: usize>(sgm: &mut SgMap<K, V, N>)

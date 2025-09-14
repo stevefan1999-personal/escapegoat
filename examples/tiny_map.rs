@@ -1,5 +1,5 @@
 use core::mem::size_of_val;
-use scapegoat::SgMap;
+use escapegoat::SgMap;
 
 fn main() {
     let tiny_map: SgMap<u8, u8, 128> = SgMap::new();

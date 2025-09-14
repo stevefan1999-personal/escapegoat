@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 use std::convert::TryInto;
 
 use criterion::{Criterion, criterion_group, criterion_main};
-use scapegoat::SgSet;
+use escapegoat::SgSet;
 
 mod test_data;
 use test_data::{RAND_10_000, SEQ_10_000};

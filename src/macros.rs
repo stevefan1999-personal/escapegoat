@@ -5,7 +5,7 @@
 /// # Examples
 ///
 /// ```
-/// use scapegoat::{SgMap, sgmap};
+/// use escapegoat::{SgMap, sgmap};
 ///
 /// let mut map = sgmap! {
 ///     4, // Const capacity
@@ -43,7 +43,7 @@ macro_rules! sgmap {
 /// # Examples
 ///
 /// ```
-/// use scapegoat::{SgSet, sgset};
+/// use escapegoat::{SgSet, sgset};
 ///
 /// let mut set = sgset! {
 ///     4, // Const capacity

@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 use std::iter::FromIterator;
 use std::ops::Bound::{Excluded, Included};
 
-use scapegoat::{SgError, SgSet, sgset};
+use escapegoat::{SgError, SgSet, sgset};
 
 const DEFAULT_CAPACITY: usize = 10;
 

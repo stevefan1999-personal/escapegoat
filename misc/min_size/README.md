@@ -3,13 +3,13 @@
 This directory contains a repeatable experiment: how small can we possibly make binaries that use `SgMap` and it's API-compatible counterpart, `BTreeMap`?
 In terms of executable code bytes stored in the `.text` section.
 
-[`min_size_no_std`](./min_size_no_std/src/main.rs) is a `scapegoat::SgMap` test binary that calls only the most basic functions of the data structure: `insert`, `get`, and `remove`.
+[`min_size_no_std`](./min_size_no_std/src/main.rs) is a `escapegoat::SgMap` test binary that calls only the most basic functions of the data structure: `insert`, `get`, and `remove`.
 It doesn't need a global allocator, since `SgMap` uses a stack arena.
 
 ```rust
 #![no_std]
 #![no_main]
-use scapegoat::SgMap;
+use escapegoat::SgMap;
 
 #[no_mangle]
 pub fn main(_argc: i32, _argv: *const *const u8) -> isize {
@@ -107,7 +107,7 @@ error: could not find native static library `c`, perhaps an -L flag is missing?
 
 Now we're ready to build some static binaries, fully from source!
 
-### Results for `scapegoat::SgMap`
+### Results for `escapegoat::SgMap`
 
 Determine executable byte count.
 Note `-A` flag for GNU `binutils` `size` to see the actual size of the `.text` section.
@@ -144,7 +144,7 @@ Sample output (oddly the reported `.text` size of 13.9KB is smaller than `cargo 
 File  .text    Size     Crate Name
  3.1%  17.7%  2.5KiB       std core::slice::sort::recurse
  2.5%  14.0%  1.9KiB [Unknown] main
- 1.6%   9.1%  1.3KiB scapegoat scapegoat::tree::tree::SgTree<K,V,_>::rebuild
+ 1.6%   9.1%  1.3KiB escapegoat escapegoat::tree::tree::SgTree<K,V,_>::rebuild
  0.8%   4.6%    651B       std core::fmt::Formatter::pad_integral
  0.8%   4.4%    625B       std <core::fmt::builders::PadAdapter as core::fmt::Write>::write_str
  0.7%   4.0%    568B       std core::fmt::write
@@ -217,7 +217,7 @@ File  .text    Size     Crate Name
 
 ### Conclusion
 
-Both `scapegoat::SgMap` and `std::collections::BTreeMap` can produce working dynamic collections in binaries under 20KB.
+Both `escapegoat::SgMap` and `std::collections::BTreeMap` can produce working dynamic collections in binaries under 20KB.
 Perhaps surprisingly, both produce 14-17KB binaries despite the latter including `musl` libc's memory allocator.
 
 * Thanks to everyone that made suggestions on [this reddit thread](https://www.reddit.com/r/rust/comments/qu3k38/1012x_smaller_executable_footprint_than/).

@@ -13,8 +13,8 @@ use libfuzzer_sys::{
     fuzz_target,
 };
 
-use scapegoat::map_types::Entry as SgEntry;
-use scapegoat::SgMap;
+use escapegoat::map_types::Entry as SgEntry;
+use escapegoat::SgMap;
 use std::collections::btree_map::Entry as BtEntry;
 use std::collections::BTreeMap;
 

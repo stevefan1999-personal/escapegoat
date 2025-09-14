@@ -25,7 +25,7 @@ use smallnum::SmallUnsigned;
 // The `u16::MAX` limit is documented in our main `README.md`.
 pub type Idx = u16;
 
-// See: https://github.com/tnballo/scapegoat/blob/master/CONFIG.md
+// See: https://github.com/stevefan1999-personal/escapegoat/blob/master/CONFIG.md
 const DEFAULT_ALPHA: U12F20 = U12F20::lit("0.6666666666666"); // 2/3 ≈ 0.666666
 
 /// A memory-efficient, self-balancing binary search tree.

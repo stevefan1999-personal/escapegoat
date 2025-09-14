@@ -1,14 +1,14 @@
 [package]
-name = "scapegoat"
-version = "2.3.0"
+name = "escapegoat"
+version = "1.0.0"
 rust-version = "1.85"
-authors = ["Tiemoko Ballo"]
+authors = ["Tiemoko Ballo", "Steve Fan"]
 edition = "2024"
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/tnballo/scapegoat"
-repository = "https://github.com/tnballo/scapegoat"
-documentation = "https://docs.rs/scapegoat"
+homepage = "https://github.com/stevefan1999-personal/escapegoat"
+repository = "https://github.com/stevefan1999-personal/escapegoat"
+documentation = "https://docs.rs/escapegoat"
 keywords = ["stack", "set", "map", "no_std", "fallible"]
 categories = ["algorithms", "data-structures", "no-std", "embedded"]
 description = "Safe, fallible, embedded-friendly ordered set/map via a scapegoat tree. Validated against BTreeSet/BTreeMap."
@@ -39,7 +39,7 @@ low_mem_insert = []
 fast_rebalance = []
 
 [lib]
-name = "scapegoat"
+name = "escapegoat"
 path = "src/lib.rs"
 
 [[bench]]

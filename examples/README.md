@@ -14,4 +14,4 @@ Alphabetical enumeration:
 * [`try_insert`](./try_insert.rs) - fallible insertion semantics.
 
 Have another `#![no_std]` example?
-Consider [contributing](https://github.com/tnballo/scapegoat/pulls) it!
+Consider [contributing](https://github.com/stevefan1999-personal/escapegoat/pulls) it!

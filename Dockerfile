@@ -21,9 +21,9 @@ RUN cargo install cargo-binutils
 RUN cargo install cargo-bloat
 
 # Src import
-RUN mkdir /scapegoat
-WORKDIR /scapegoat
-COPY . /scapegoat/
+RUN mkdir /escapegoat
+WORKDIR /escapegoat
+COPY . /escapegoat/
 
 # Test (uses 1.56 BTree{Set,Map} feature in tests)
 RUN rustup default 1.56.0-x86_64-unknown-linux-gnu

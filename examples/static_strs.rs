@@ -1,5 +1,5 @@
 use arrayvec::ArrayVec;
-use scapegoat::SgMap;
+use escapegoat::SgMap;
 
 // This const is an argument to each generic constructor below.
 // So we'll use *only the bare minimum* memory for 5 elements.

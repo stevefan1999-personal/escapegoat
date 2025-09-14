@@ -5,7 +5,7 @@ use std::fmt;
 
 use libfuzzer_sys::{arbitrary::Arbitrary, fuzz_target};
 
-use scapegoat::Arena;
+use escapegoat::Arena;
 use smallnum::small_unsigned;
 
 const CAPACITY: usize = 2048;

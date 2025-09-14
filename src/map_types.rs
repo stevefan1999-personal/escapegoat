@@ -259,7 +259,7 @@ impl<'a, K: Ord, V, const N: usize> Entry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<&str, usize, 10>::new();
     /// map.entry("poneyland").or_insert(12);
@@ -279,7 +279,7 @@ impl<'a, K: Ord, V, const N: usize> Entry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<&str, usize, 10>::new();
     /// let x = 42;
@@ -304,7 +304,7 @@ impl<'a, K: Ord, V, const N: usize> Entry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<&str, usize, 10>::new();
     ///
@@ -327,7 +327,7 @@ impl<'a, K: Ord, V, const N: usize> Entry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<&str, usize, 10>::new();
     /// assert_eq!(map.entry("poneyland").key(), &"poneyland");
@@ -345,7 +345,7 @@ impl<'a, K: Ord, V, const N: usize> Entry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<&str, usize, 10>::new();
     ///
@@ -377,7 +377,7 @@ impl<'a, K: Ord, V: Default, const N: usize> Entry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<&str, Option<usize>, 10>::new();
     /// map.entry("poneyland").or_default();
@@ -406,7 +406,7 @@ impl<'a, K: Ord, V, const N: usize> VacantEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<&str, usize, 2>::new();
     /// assert_eq!(map.entry("poneyland").key(), &"poneyland");
@@ -420,8 +420,8 @@ impl<'a, K: Ord, V, const N: usize> VacantEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
-    /// use scapegoat::map_types::Entry;
+    /// use escapegoat::SgMap;
+    /// use escapegoat::map_types::Entry;
     ///
     /// let mut map = SgMap::<&str, usize, 2>::new();
     ///
@@ -439,8 +439,8 @@ impl<'a, K: Ord, V, const N: usize> VacantEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
-    /// use scapegoat::map_types::Entry;
+    /// use escapegoat::SgMap;
+    /// use escapegoat::map_types::Entry;
     ///
     /// let mut map = SgMap::<&str, u32, 2>::new();
     ///
@@ -472,7 +472,7 @@ impl<'a, K: Ord, V, const N: usize> OccupiedEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
+    /// use escapegoat::SgMap;
     ///
     /// let mut map = SgMap::<&str, usize, 2>::new();
     /// map.entry("poneyland").or_insert(12);
@@ -487,8 +487,8 @@ impl<'a, K: Ord, V, const N: usize> OccupiedEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
-    /// use scapegoat::map_types::Entry;
+    /// use escapegoat::SgMap;
+    /// use escapegoat::map_types::Entry;
     ///
     /// let mut map = SgMap::<&str, usize, 2>::new();
     /// map.entry("poneyland").or_insert(12);
@@ -511,8 +511,8 @@ impl<'a, K: Ord, V, const N: usize> OccupiedEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
-    /// use scapegoat::map_types::Entry;
+    /// use escapegoat::SgMap;
+    /// use escapegoat::map_types::Entry;
     ///
     /// let mut map = SgMap::<&str, usize, 2>::new();
     /// map.entry("poneyland").or_insert(12);
@@ -540,8 +540,8 @@ impl<'a, K: Ord, V, const N: usize> OccupiedEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
-    /// use scapegoat::map_types::Entry;
+    /// use escapegoat::SgMap;
+    /// use escapegoat::map_types::Entry;
     ///
     /// let mut map = SgMap::<&str, usize, 2>::new();
     /// map.entry("poneyland").or_insert(12);
@@ -562,8 +562,8 @@ impl<'a, K: Ord, V, const N: usize> OccupiedEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
-    /// use scapegoat::map_types::Entry;
+    /// use escapegoat::SgMap;
+    /// use escapegoat::map_types::Entry;
     ///
     /// let mut map = SgMap::<&str, usize, 2>::new();
     /// map.entry("poneyland").or_insert(12);
@@ -582,8 +582,8 @@ impl<'a, K: Ord, V, const N: usize> OccupiedEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
-    /// use scapegoat::map_types::Entry;
+    /// use escapegoat::SgMap;
+    /// use escapegoat::map_types::Entry;
     ///
     /// let mut map = SgMap::<&str, usize, 2>::new();
     /// map.entry("poneyland").or_insert(12);
@@ -608,8 +608,8 @@ impl<'a, K: Ord, V, const N: usize> OccupiedEntry<'a, K, V, N> {
     /// # Examples
     ///
     /// ```
-    /// use scapegoat::SgMap;
-    /// use scapegoat::map_types::Entry;
+    /// use escapegoat::SgMap;
+    /// use escapegoat::map_types::Entry;
     ///
     /// let mut map = SgMap::<&str, usize, 2>::new();
     /// map.entry("poneyland").or_insert(12);

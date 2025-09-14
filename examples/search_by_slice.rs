@@ -1,7 +1,7 @@
 use core::mem::size_of_val;
 
 use arrayvec::ArrayVec;
-use scapegoat::SgSet;
+use escapegoat::SgSet;
 
 const U8_BUF_LEN: usize = 32;
 

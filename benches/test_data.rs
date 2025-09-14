@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 use std::iter::FromIterator;
 
 use rand::Rng;
-use scapegoat::SgSet;
+use escapegoat::SgSet;
 
 // Random Test Data ----------------------------------------------------------------------------------------------------
 
